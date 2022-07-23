@@ -1,0 +1,22 @@
+{
+  "name": "groupomania-back",
+  "version": "1.0.0",
+  "description": "backend of groupomania project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tham94/P7-Groupomania.git"
+  },
+  "author": "Thamime M.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tham94/P7-Groupomania/issues"
+  },
+  "homepage": "https://github.com/Tham94/P7-Groupomania#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
