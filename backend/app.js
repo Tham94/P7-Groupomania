@@ -3,6 +3,8 @@ const mysql = require('mysql');
 require('dotenv').config();
 const cors = require('cors');
 
+const userRoutes = require('./routes/user');
+
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -12,7 +14,6 @@ const connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err;
   console.log('Connected to the Database!');
-  connection.query('USE groupomania');
 });
 
 const app = express();
@@ -33,5 +34,7 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'server is running' });
 });
+
+app.use('/api/auth/', userRoutes);
 
 module.exports = app;
