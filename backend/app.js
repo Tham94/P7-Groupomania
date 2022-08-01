@@ -1,20 +1,10 @@
 const express = require('express');
-const mysql = require('mysql');
 require('dotenv').config();
 const cors = require('cors');
+const path = require('path');
 
 const userRoutes = require('./routes/user');
-
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-});
-
-connection.connect(function (err) {
-  if (err) throw err;
-  console.log('Connected to the Database!');
-});
+const postRoutes = require('./routes/post');
 
 const app = express();
 app.use(express.json());
@@ -36,5 +26,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth/', userRoutes);
+app.use('/api/posts/', postRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;
