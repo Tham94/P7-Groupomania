@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const prisma = require('../prisma/client');
+const fs = require('fs');
 
 exports.signup = async (req, res) => {
   const { email, password } = req.body;
@@ -74,22 +75,39 @@ exports.login = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   const { id } = req.params;
   const authUser = req.auth.authorId;
+  /* Récupération de tous les Urls des images dans un tableau avant suppression */
+  const allPostsOfUser = await prisma.post.findMany({
+    where: { authorId: authUser },
+  });
+  const allUrl = [];
+  allPostsOfUser.forEach((post) => {
+    allUrl.push(post.imageUrl);
+  });
 
   try {
-    authUser === parseInt(id)
-      ? await prisma.user
-          .delete({ where: { id: authUser } })
-          .then(() => {
-            res
-              .status(200)
-              .json({ message: `User ${id} account was deleted successfully` });
-          })
-          .catch((error) => {
-            res.status(400).json(error);
-          })
-      : res
-          .status(403)
-          .json({ message: 'Unauthorized user for deleting his account ' });
+    if (authUser === parseInt(id)) {
+      // Suppression de toutes les images postées par le user
+      for (let i = 0; i < allUrl.length; i++) {
+        let filename = allUrl[i].split('/images/')[1];
+        fs.unlink(`images/${filename}`, () => {
+          return;
+        });
+      }
+      await prisma.user
+        .delete({ where: { id: authUser } })
+        .then(() => {
+          res.status(200).json({
+            message: `User ${id} account was deleted successfully`,
+          });
+        })
+        .catch((error) => {
+          res.status(400).json(error);
+        });
+    } else {
+      res
+        .status(403)
+        .json({ message: 'Unauthorized user for deleting his account ' });
+    }
   } catch (error) {
     res.status(500).json({ error });
   }
