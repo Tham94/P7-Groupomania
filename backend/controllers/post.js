@@ -1,4 +1,5 @@
 const prisma = require('../prisma/client');
+const fs = require('fs');
 
 exports.getAllPosts = async (req, res) => {
   try {
@@ -75,6 +76,40 @@ exports.createPost = async (req, res) => {
   }
 };
 
-exports.updatePost = async (req, res) => {};
-exports.deletePost = async (req, res) => {};
-exports.likePost = async (req, res) => {};
+exports.updatePost = async (req, res) => {
+  const authUser = req.auth.authorId;
+};
+exports.deletePost = async (req, res) => {
+  const authUser = req.auth.authorId;
+  const postId = parseInt(req.params.id);
+  const { userId } = req.body;
+  const post = await prisma.post.findUnique({ where: { id: postId } });
+
+  try {
+    if (post !== null) {
+      const filename = post.imageUrl.split('/images/')[1];
+      parseInt(userId) === authUser
+        ? fs.unlink(`images/${filename}`, async () => {
+            await prisma.post
+              .delete({ where: { id: postId } })
+              .then(
+                res.status(200).json({
+                  message: `Post with id ${postId} was deleted successfully`,
+                })
+              )
+              .catch((error) => {
+                res.status(400).json(error);
+              });
+          })
+        : res.status(403).json({ message: 'Unauthorized user for posting' });
+    } else {
+      res.status(404).json({ message: 'Post not found' });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.likePost = async (req, res) => {
+  const authUser = req.auth.authorId;
+};
