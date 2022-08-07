@@ -187,13 +187,11 @@ exports.deletePost = async (req, res) => {
   const postId = parseInt(req.params.id);
   const { userId } = req.body;
   const post = await prisma.post.findUnique({ where: { id: postId } });
-
   try {
     if (post !== null) {
-      const filename = post.imageUrl.split('/images/')[1];
-      parseInt(userId) === authUser
-        ? fs.unlink(`images/${filename}`, async () => {
-            await prisma.post
+      if (parseInt(userId) === authUser) {
+        post.imageUrl === null
+          ? prisma.post
               .delete({ where: { id: postId } })
               .then(
                 res.status(200).json({
@@ -202,9 +200,22 @@ exports.deletePost = async (req, res) => {
               )
               .catch((error) => {
                 res.status(400).json(error);
-              });
-          })
-        : res.status(403).json({ message: 'Unauthorized user for posting' });
+              })
+          : fs.unlink(`images/${post.imageUrl.split('/images/')[1]}`, () => {
+              prisma.post
+                .delete({ where: { id: postId } })
+                .then(
+                  res.status(200).json({
+                    message: `Post with id ${postId} was deleted successfully`,
+                  })
+                )
+                .catch((error) => {
+                  res.status(400).json(error);
+                });
+            });
+      } else {
+        res.status(403).json({ message: 'Unauthorized user for posting' });
+      }
     } else {
       res.status(404).json({ message: 'Post not found' });
     }
@@ -232,10 +243,6 @@ exports.likePost = async (req, res) => {
         some: { user_id: authUser, post_id: postId, likes: false },
       },
     },
-  });
-
-  const numberOfDislikes = await prisma.user_post_like.count({
-    where: { post_id: postId, likes: false },
   });
 
   try {
@@ -275,6 +282,40 @@ exports.likePost = async (req, res) => {
                 .json({ message: 'You have already liked that post' });
             }
             break;
+          case -1: // cas -1 : le user dislike le post
+            if (findDislikeOfUser[0] === undefined) {
+              prisma.user_post_like
+                .create({
+                  data: {
+                    user_id: authUser,
+                    post_id: postId,
+                    likes: false,
+                  },
+                })
+                .then(() => {
+                  res
+                    .status(201)
+                    .json({ message: `You disliked the post ${postId}` });
+                })
+                .catch((error) => {
+                  res.status(400).json({ error });
+                });
+              // Ajouter le nombre de dislikes du post dans l'objet post.likes
+              const numberOfDislikes = await prisma.user_post_like.count({
+                where: { post_id: postId, likes: false },
+              });
+
+              await prisma.post.update({
+                where: { id: postId },
+                data: { dislikes: numberOfDislikes },
+              });
+            } else {
+              res
+                .status(400)
+                .json({ message: 'You have already disliked that post' });
+            }
+            break;
+          case 0: // cas où le user retire son like/dislike
         }
       } else {
         res.status(403).json({ message: 'Unauthorized user ' });
