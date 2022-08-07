@@ -8,27 +8,37 @@ datasource db {
 }
 
 model user {
-  id       Int     @id @unique(map: "id_UNIQUE") @default(autoincrement())
-  name     String? @db.VarChar(20)
-  lastName String? @db.VarChar(20)
-  email    String  @unique(map: "email") @db.VarChar(255)
-  password String  @db.VarChar(255)
-  posts    post[]
+  id             Int              @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  name           String?          @db.VarChar(20)
+  lastName       String?          @db.VarChar(20)
+  email          String           @unique(map: "email") @db.VarChar(255)
+  password       String           @db.VarChar(255)
+  posts          post[]
+  user_post_like user_post_like[]
 }
 
 model post {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now()) @db.Timestamp(0)
-  title         String   @db.VarChar(50)
-  content       String?  @db.Text
-  published     Boolean?
-  authorId      Int
-  likes         Int?
-  dislikes      Int?
-  imageUrl      String?  @db.VarChar(255)
-  usersLiked    Json?
-  usersDisliked Json?
-  user          user     @relation(fields: [authorId], references: [id], onDelete: Cascade, map: "post_ibfk_1")
+  id             Int              @id @default(autoincrement())
+  createdAt      DateTime         @default(now()) @db.Timestamp(0)
+  title          String           @db.VarChar(50)
+  content        String?          @db.Text
+  authorId       Int
+  likes          Int?             @default(0)
+  dislikes       Int?             @default(0)
+  imageUrl       String?          @db.VarChar(255)
+  user           user             @relation(fields: [authorId], references: [id], onDelete: Cascade, map: "post_ibfk_1")
+  user_post_like user_post_like[]
 
   @@index([authorId], map: "post_ibfk_1")
+}
+
+model user_post_like {
+  user_id Int
+  post_id Int
+  likes   Boolean?
+  post    post     @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_post")
+  user    user     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user")
+
+  @@id([user_id, post_id])
+  @@index([post_id], map: "fk_post")
 }

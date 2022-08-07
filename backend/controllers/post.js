@@ -1,7 +1,5 @@
 const prisma = require('../prisma/client');
 const fs = require('fs');
-const { post } = require('../prisma/client');
-const { Console } = require('console');
 
 /**
  * [getAllPosts description]
@@ -217,4 +215,74 @@ exports.deletePost = async (req, res) => {
 
 exports.likePost = async (req, res) => {
   const authUser = req.auth.authorId;
+  const { authorId, like } = req.body;
+  const postId = parseInt(req.params.id);
+  const post = await prisma.post.findUnique({ where: { id: postId } });
+  // Checker dans la table de liaison si le user a déja liké le post
+  const findLikeOfUser = await prisma.post.findMany({
+    where: {
+      user_post_like: {
+        some: { user_id: authUser, post_id: postId, likes: true },
+      },
+    },
+  });
+  const findDislikeOfUser = await prisma.post.findMany({
+    where: {
+      user_post_like: {
+        some: { user_id: authUser, post_id: postId, likes: false },
+      },
+    },
+  });
+
+  const numberOfDislikes = await prisma.user_post_like.count({
+    where: { post_id: postId, likes: false },
+  });
+
+  try {
+    if (post !== null) {
+      if (authUser === authorId) {
+        switch (like) {
+          case 1: // cas 1 : si le user like le post
+            if (findLikeOfUser[0] === undefined) {
+              prisma.user_post_like
+                .create({
+                  data: {
+                    user_id: authUser,
+                    post_id: postId,
+                    likes: true,
+                  },
+                })
+                .then(() => {
+                  res
+                    .status(201)
+                    .json({ message: `You liked the post ${postId}` });
+                })
+                .catch((error) => {
+                  res.status(400).json({ error });
+                });
+              // Ajouter le nombre de likes du post dans l'objet post.likes
+              const numberOfLikes = await prisma.user_post_like.count({
+                where: { post_id: postId, likes: true },
+              });
+
+              await prisma.post.update({
+                where: { id: postId },
+                data: { likes: numberOfLikes },
+              });
+            } else {
+              res
+                .status(400)
+                .json({ message: 'You have already liked that post' });
+            }
+            break;
+        }
+      } else {
+        res.status(403).json({ message: 'Unauthorized user ' });
+      }
+    } else {
+      res.status(404).json({ message: `Post ${postId} is not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };
