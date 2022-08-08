@@ -27,15 +27,13 @@ exports.getAllPosts = async (req, res) => {
  */
 exports.getOnePost = async (req, res) => {
   try {
-    await prisma.post
-      .findUnique({
-        where: { id: parseInt(req.params.id) },
-      })
-      .then((post) => {
-        post
-          ? res.status(200).json(post)
-          : res.status(404).json({ message: 'Post not found' });
-      });
+    const post = await prisma.post.findUnique({
+      where: { id: parseInt(req.params.id) },
+    });
+
+    post
+      ? res.status(200).json(post)
+      : res.status(404).json({ message: 'Post not found' });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -48,41 +46,29 @@ exports.createPost = async (req, res) => {
   try {
     if (authUser === parseInt(authorId)) {
       image === undefined
-        ? await prisma.post
-            .create({
-              data: {
-                authorId: authUser,
-                title: title,
-                content: content,
-                likes: 0,
-                dislikes: 0,
-              },
-            })
-            .then(() => {
-              res
-                .status(201)
-                .json({ message: 'You have sent a post successfully!' });
-            })
-            .catch((error) => res.status(400).json(error))
-        : await prisma.post
-            .create({
-              data: {
-                authorId: authUser,
-                title: title,
-                content: content,
-                imageUrl: `${req.protocol}://${req.get('host')}/images/${
-                  req.file.filename
-                }`,
-                likes: 0,
-                dislikes: 0,
-              },
-            })
-            .then(() => {
-              res
-                .status(201)
-                .json({ message: 'You have sent a post successfully!' });
-            })
-            .catch((error) => res.status(400).json(error));
+        ? await prisma.post.create({
+            data: {
+              authorId: authUser,
+              title: title,
+              content: content,
+              likes: 0,
+              dislikes: 0,
+            },
+          })
+        : await prisma.post.create({
+            data: {
+              authorId: authUser,
+              title: title,
+              content: content,
+              imageUrl: `${req.protocol}://${req.get('host')}/images/${
+                req.file.filename
+              }`,
+              likes: 0,
+              dislikes: 0,
+            },
+          });
+
+      res.status(201).json({ message: 'You have sent a post successfully!' });
     } else {
       res.status(403).json({ message: 'Unauthorized user for posting' });
     }
@@ -105,51 +91,34 @@ exports.updatePost = async (req, res) => {
   const post = await prisma.post.findUnique({ where: { id: parseInt(id) } });
   const { authorId, title, content } = req.body;
   const image = req.file;
-  console.log(post);
+
   try {
     if (post !== null) {
       if (authUser === parseInt(authorId)) {
         if (image === undefined) {
-          prisma.post
-            .update({
-              where: { id: parseInt(id) },
-              data: {
-                title: title,
-                content: content,
-              },
-            })
-            .then(() => {
-              res.status(201).json({
-                message: 'Post updated successfully',
-              });
-            })
-            .catch((error) => {
-              res.status(400).json({ error });
-            });
+          await prisma.post.update({
+            where: { id: parseInt(id) },
+            data: {
+              title: title,
+              content: content,
+            },
+          });
         } else {
           post.imageUrl === null
-            ? prisma.post
-                .update({
-                  where: { id: parseInt(id) },
-                  data: {
-                    title: title,
-                    content: content,
-                    imageUrl: `${req.protocol}://${req.get('host')}/images/${
-                      image.filename
-                    }`,
-                  },
-                })
-                .then(() => {
-                  res.status(201).json({
-                    message: 'Post updated successfully',
-                  });
-                })
-                .catch((error) => {
-                  res.status(400).json({ error });
-                })
-            : fs.unlink(`images/${post.imageUrl.split('/images/')[1]}`, () => {
-                prisma.post
-                  .update({
+            ? await prisma.post.update({
+                where: { id: parseInt(id) },
+                data: {
+                  title: title,
+                  content: content,
+                  imageUrl: `${req.protocol}://${req.get('host')}/images/${
+                    image.filename
+                  }`,
+                },
+              })
+            : fs.unlink(
+                `images/${post.imageUrl.split('/images/')[1]}`,
+                async () => {
+                  await prisma.post.update({
                     where: { id: parseInt(id) },
                     data: {
                       title: title,
@@ -158,17 +127,11 @@ exports.updatePost = async (req, res) => {
                         req.file.filename
                       }`,
                     },
-                  })
-                  .then(() => {
-                    res.status(201).json({
-                      message: 'Post updated successfully',
-                    });
-                  })
-                  .catch((error) => {
-                    res.status(400).json({ error });
                   });
-              });
+                }
+              );
         }
+        res.status(201).json({ message: 'Post updated successfully' });
       } else {
         res
           .status(403)
@@ -191,28 +154,16 @@ exports.deletePost = async (req, res) => {
     if (post !== null) {
       if (parseInt(userId) === authUser) {
         post.imageUrl === null
-          ? prisma.post
-              .delete({ where: { id: postId } })
-              .then(
-                res.status(200).json({
-                  message: `Post with id ${postId} was deleted successfully`,
-                })
-              )
-              .catch((error) => {
-                res.status(400).json(error);
-              })
-          : fs.unlink(`images/${post.imageUrl.split('/images/')[1]}`, () => {
-              prisma.post
-                .delete({ where: { id: postId } })
-                .then(
-                  res.status(200).json({
-                    message: `Post with id ${postId} was deleted successfully`,
-                  })
-                )
-                .catch((error) => {
-                  res.status(400).json(error);
-                });
-            });
+          ? await prisma.post.delete({ where: { id: postId } })
+          : fs.unlink(
+              `images/${post.imageUrl.split('/images/')[1]}`,
+              async () => {
+                await prisma.post.delete({ where: { id: postId } });
+              }
+            );
+        res
+          .status(200)
+          .json({ message: `Post with id ${postId} was deleted successfully` });
       } else {
         res.status(403).json({ message: 'Unauthorized user for posting' });
       }
@@ -229,93 +180,97 @@ exports.likePost = async (req, res) => {
   const { authorId, like } = req.body;
   const postId = parseInt(req.params.id);
   const post = await prisma.post.findUnique({ where: { id: postId } });
-  // Checker dans la table de liaison si le user a déja liké le post
-  const findLikeOfUser = await prisma.post.findMany({
-    where: {
-      user_post_like: {
-        some: { user_id: authUser, post_id: postId, likes: true },
-      },
-    },
+  // Checker dans la table de liaison si le user a déja liké/disliké le post
+  const getLikeOnTable = await prisma.user_post_like.findMany({
+    where: { user_id: authUser, post_id: postId, likes: true },
   });
-  const findDislikeOfUser = await prisma.post.findMany({
-    where: {
-      user_post_like: {
-        some: { user_id: authUser, post_id: postId, likes: false },
-      },
-    },
+  const checkLikeStatus = getLikeOnTable.findIndex((el) => el.post_id);
+
+  const getDislikeOnTable = await prisma.user_post_like.findMany({
+    where: { user_id: authUser, post_id: postId, likes: false },
   });
+  const checkDislikeStatus = getDislikeOnTable.findIndex((el) => el.post_id);
 
   try {
     if (post !== null) {
       if (authUser === authorId) {
         switch (like) {
-          case 1: // cas 1 : si le user like le post
-            if (findLikeOfUser[0] === undefined) {
-              prisma.user_post_like
-                .create({
-                  data: {
-                    user_id: authUser,
-                    post_id: postId,
-                    likes: true,
-                  },
-                })
-                .then(() => {
-                  res
-                    .status(201)
-                    .json({ message: `You liked the post ${postId}` });
-                })
-                .catch((error) => {
-                  res.status(400).json({ error });
-                });
-              // Ajouter le nombre de likes du post dans l'objet post.likes
-              const numberOfLikes = await prisma.user_post_like.count({
-                where: { post_id: postId, likes: true },
+          // cas où le user like le post
+          case 1:
+            if (checkLikeStatus === -1) {
+              await prisma.user_post_like.create({
+                data: {
+                  user_id: authUser,
+                  post_id: postId,
+                  likes: true,
+                },
               });
-
+              // incrémentation du like
               await prisma.post.update({
                 where: { id: postId },
-                data: { likes: numberOfLikes },
+                data: { likes: { increment: 1 } },
               });
+              res.status(201).json({ message: `You liked the post ${postId}` });
             } else {
               res
                 .status(400)
                 .json({ message: 'You have already liked that post' });
             }
             break;
-          case -1: // cas -1 : le user dislike le post
-            if (findDislikeOfUser[0] === undefined) {
-              prisma.user_post_like
-                .create({
-                  data: {
-                    user_id: authUser,
-                    post_id: postId,
-                    likes: false,
-                  },
-                })
-                .then(() => {
-                  res
-                    .status(201)
-                    .json({ message: `You disliked the post ${postId}` });
-                })
-                .catch((error) => {
-                  res.status(400).json({ error });
-                });
-              // Ajouter le nombre de dislikes du post dans l'objet post.likes
-              const numberOfDislikes = await prisma.user_post_like.count({
-                where: { post_id: postId, likes: false },
+          // cas où le user dislike le post
+          case -1:
+            if (checkDislikeStatus === -1) {
+              await prisma.user_post_like.create({
+                data: {
+                  user_id: authUser,
+                  post_id: postId,
+                  likes: false,
+                },
               });
-
+              // incrémentation du dislike
               await prisma.post.update({
                 where: { id: postId },
-                data: { dislikes: numberOfDislikes },
+                data: { dislikes: { increment: 1 } },
               });
+              res
+                .status(201)
+                .json({ message: `You disliked the post ${postId}` });
             } else {
               res
                 .status(400)
                 .json({ message: 'You have already disliked that post' });
             }
             break;
-          case 0: // cas où le user retire son like/dislike
+          case 0:
+            /* cas où le user annule son like/dislike : 
+          suppression dans la table de liaison + 
+          décrémentation du like/dislike dans la table post */
+            if (checkLikeStatus === 0) {
+              await prisma.user_post_like.deleteMany({
+                where: { user_id: authUser, post_id: postId, likes: true },
+              });
+              await prisma.post.update({
+                where: { id: postId },
+                data: { likes: { increment: -1 } },
+              });
+              res
+                .status(201)
+                .json({ message: 'You have removed your like successfully' });
+            }
+
+            if (checkDislikeStatus === 0) {
+              await prisma.user_post_like.deleteMany({
+                where: { user_id: authUser, post_id: postId, likes: false },
+              });
+              await prisma.post.update({
+                where: { id: postId },
+                data: { dislikes: { increment: -1 } },
+              });
+              res.status(201).json({
+                message: 'You have removed your dislike successfully',
+              });
+            }
+            break;
         }
       } else {
         res.status(403).json({ message: 'Unauthorized user ' });
