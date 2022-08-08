@@ -10,21 +10,14 @@ exports.signup = async (req, res) => {
   try {
     signedUser === null
       ? bcrypt.hash(password, 10).then(async (hash) => {
-          await prisma.user
-            .create({
-              data: {
-                email: email,
-                password: hash,
-              },
-            })
-            .then(() => {
-              res
-                .status(201)
-                .json({ message: `${email} has joined the network` });
-            })
-            .catch((error) => {
-              res.status(400).json({ message: error });
-            });
+          await prisma.user.create({
+            data: {
+              email: email,
+              password: hash,
+            },
+          });
+
+          res.status(201).json({ message: `${email} has joined the network` });
         })
       : res.status(401).json({ message: `User ${email} is already signed` });
   } catch (error) {
@@ -35,38 +28,33 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    await prisma.user
-      .findUnique({
-        where: {
-          email: email,
-        },
-      })
-      .then((user) => {
-        if (!user) {
-          return res
-            .status(404)
-            .json({ error: `User ${email} is not found !` });
-        } else {
-          bcrypt
-            .compare(password, user.password)
-            .then((valid) => {
-              if (!valid) {
-                return res.status(403).json({ error: 'Invalid password' });
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+    if (!user) {
+      return res.status(404).json({ error: `User ${email} is not found !` });
+    } else {
+      bcrypt
+        .compare(password, user.password)
+        .then((valid) => {
+          if (!valid) {
+            return res.status(403).json({ error: 'Invalid password' });
+          }
+          res.status(201).json({
+            authorId: user.id,
+            token: jwt.sign(
+              { authorId: user.id },
+              process.env.SECRET_KEY_SALTED,
+              {
+                expiresIn: '24h',
               }
-              res.status(201).json({
-                authorId: user.id,
-                token: jwt.sign(
-                  { authorId: user.id },
-                  process.env.SECRET_KEY_SALTED,
-                  {
-                    expiresIn: '24h',
-                  }
-                ),
-              });
-            })
-            .catch((error) => res.status(400).json({ error }));
-        }
-      });
+            ),
+          });
+        })
+        .catch((error) => res.status(400).json({ error }));
+    }
   } catch (error) {
     res.status(500).json({ error });
   }

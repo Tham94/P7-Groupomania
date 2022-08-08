@@ -4,10 +4,10 @@ const fs = require('fs');
 /**
  * [getAllPosts description]
  *
- * @param   {object}  req  [request]
- * @param   {object}  res  [response from the api]
+ * @param   {object}  req  [requête]
+ * @param   {object}  res  [réponse de l'api]
  *
- * @return  {Array<object>}       [Array of objects containing all the posts in the DB]
+ * @return  {Array<object>}       [Tableau d'objet contenant tous les posts de la BDD]
  */
 exports.getAllPosts = async (req, res) => {
   try {
@@ -20,10 +20,10 @@ exports.getAllPosts = async (req, res) => {
 /**
  * [getOnePost description]
  *
- * @param   {object}  req  [request]
- * @param   {object}  res  [response from the api]
+ * @param   {object}  req  [requête]
+ * @param   {object}  res  [réponse de l'api]
  *
- * @return  {object}       [get the unique post requested into object type]
+ * @return  {object}       [Récupération du post voulu]
  */
 exports.getOnePost = async (req, res) => {
   try {
@@ -38,7 +38,12 @@ exports.getOnePost = async (req, res) => {
     res.status(500).json(error);
   }
 };
-
+/**
+ * [createPost description]
+ *
+ ****Création d'un post avec ou sans image
+ *
+ */
 exports.createPost = async (req, res) => {
   const { title, content, authorId } = req.body;
   const image = req.file;
@@ -79,11 +84,10 @@ exports.createPost = async (req, res) => {
 
 /**
  * [updatePost description]
- *
- * @param   {[type]}  req  [req description]
- * @param   {[type]}  res  [res description]
- *
- * @return  {[type]}       [return description]
+ **** Mise à jour d'un post 3 cas:
+ * - uniquement du texte
+ * - rajouter une image sur un post sans image
+ * - modifier l'image postée
  */
 exports.updatePost = async (req, res) => {
   const authUser = req.auth.authorId;
@@ -145,6 +149,13 @@ exports.updatePost = async (req, res) => {
   }
 };
 
+/**
+ * [deletePost description]
+ *
+ * Suppression d'un post :
+ * - sans image
+ * - avec image
+ */
 exports.deletePost = async (req, res) => {
   const authUser = req.auth.authorId;
   const postId = parseInt(req.params.id);
@@ -175,6 +186,16 @@ exports.deletePost = async (req, res) => {
   }
 };
 
+/**
+ * [likePost description]
+ * Like ou Dislike d'un post (switch sur la valeur de la requete like : 1; -1 ou 0):
+ * - recherche du like dans la table de liaison
+ * - si non trouvé, liker (true) ou disliker (false)
+ * - incrémentation du like/dislike dans la table post
+ * - possibilité de retirer son like/dislike
+ * - décrémentation du like/dislike dans la table post
+ *
+ */
 exports.likePost = async (req, res) => {
   const authUser = req.auth.authorId;
   const { authorId, like } = req.body;
@@ -195,7 +216,6 @@ exports.likePost = async (req, res) => {
     if (post !== null) {
       if (authUser === authorId) {
         switch (like) {
-          // cas où le user like le post
           case 1:
             if (checkLikeStatus === -1) {
               await prisma.user_post_like.create({
@@ -205,7 +225,6 @@ exports.likePost = async (req, res) => {
                   likes: true,
                 },
               });
-              // incrémentation du like
               await prisma.post.update({
                 where: { id: postId },
                 data: { likes: { increment: 1 } },
@@ -217,7 +236,6 @@ exports.likePost = async (req, res) => {
                 .json({ message: 'You have already liked that post' });
             }
             break;
-          // cas où le user dislike le post
           case -1:
             if (checkDislikeStatus === -1) {
               await prisma.user_post_like.create({
@@ -227,7 +245,6 @@ exports.likePost = async (req, res) => {
                   likes: false,
                 },
               });
-              // incrémentation du dislike
               await prisma.post.update({
                 where: { id: postId },
                 data: { dislikes: { increment: 1 } },
@@ -242,9 +259,6 @@ exports.likePost = async (req, res) => {
             }
             break;
           case 0:
-            /* cas où le user annule son like/dislike : 
-          suppression dans la table de liaison + 
-          décrémentation du like/dislike dans la table post */
             if (checkLikeStatus === 0) {
               await prisma.user_post_like.deleteMany({
                 where: { user_id: authUser, post_id: postId, likes: true },
