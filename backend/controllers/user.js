@@ -54,9 +54,9 @@ exports.login = async (req, res) => {
                 return res.status(403).json({ error: 'Invalid password' });
               }
               res.status(201).json({
-                userId: user.id,
+                authorId: user.id,
                 token: jwt.sign(
-                  { userId: user.id },
+                  { authorId: user.id },
                   process.env.SECRET_KEY_SALTED,
                   {
                     expiresIn: '24h',
@@ -93,16 +93,10 @@ exports.deleteUser = async (req, res) => {
           return;
         });
       }
-      await prisma.user
-        .delete({ where: { id: authUser } })
-        .then(() => {
-          res.status(200).json({
-            message: `User ${id} account was deleted successfully`,
-          });
-        })
-        .catch((error) => {
-          res.status(400).json(error);
-        });
+      await prisma.user.delete({ where: { id: authUser } });
+      res.status(200).json({
+        message: `User ${id} account was deleted successfully`,
+      });
     } else {
       res
         .status(403)
