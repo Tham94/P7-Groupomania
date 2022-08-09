@@ -27,12 +27,12 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+  const user = await prisma.user.findUnique({ where: { email: email } });
+  const admin = await prisma.user.findMany({
+    where: { role: 'admin' },
+  });
+
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        email: email,
-      },
-    });
     if (!user) {
       return res.status(404).json({ error: `User ${email} is not found !` });
     } else {
@@ -42,16 +42,29 @@ exports.login = async (req, res) => {
           if (!valid) {
             return res.status(403).json({ error: 'Invalid password' });
           }
-          res.status(201).json({
-            authorId: user.id,
-            token: jwt.sign(
-              { authorId: user.id },
-              process.env.SECRET_KEY_SALTED,
-              {
-                expiresIn: '24h',
-              }
-            ),
-          });
+          if (user.email == admin[0].email) {
+            res.status(201).json({
+              adminId: user.id,
+              token: jwt.sign(
+                { adminId: user.id },
+                process.env.SECRET_KEY_SALTED,
+                {
+                  expiresIn: '24h',
+                }
+              ),
+            });
+          } else {
+            res.status(201).json({
+              userId: user.id,
+              token: jwt.sign(
+                { userId: user.id },
+                process.env.SECRET_KEY_SALTED,
+                {
+                  expiresIn: '24h',
+                }
+              ),
+            });
+          }
         })
         .catch((error) => res.status(400).json({ error }));
     }

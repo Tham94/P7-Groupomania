@@ -91,6 +91,7 @@ exports.createPost = async (req, res) => {
  */
 exports.updatePost = async (req, res) => {
   const authUser = req.auth.authorId;
+  const admin = req.auth.adminId;
   const { id } = req.params;
   const post = await prisma.post.findUnique({ where: { id: parseInt(id) } });
   const { authorId, title, content } = req.body;
@@ -98,7 +99,7 @@ exports.updatePost = async (req, res) => {
 
   try {
     if (post !== null) {
-      if (authUser === parseInt(authorId)) {
+      if (authUser === parseInt(authorId) || admin !== undefined) {
         if (image === undefined) {
           await prisma.post.update({
             where: { id: parseInt(id) },
@@ -158,12 +159,13 @@ exports.updatePost = async (req, res) => {
  */
 exports.deletePost = async (req, res) => {
   const authUser = req.auth.authorId;
+  const admin = req.auth.adminId;
   const postId = parseInt(req.params.id);
-  const { userId } = req.body;
+  const { authorId } = req.body;
   const post = await prisma.post.findUnique({ where: { id: postId } });
   try {
     if (post !== null) {
-      if (parseInt(userId) === authUser) {
+      if (parseInt(authorId) === authUser || admin !== undefined) {
         post.imageUrl === null
           ? await prisma.post.delete({ where: { id: postId } })
           : fs.unlink(
