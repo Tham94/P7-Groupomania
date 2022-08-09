@@ -13,6 +13,7 @@ model user {
   lastName       String?          @db.VarChar(20)
   email          String           @unique(map: "email") @db.VarChar(255)
   password       String           @db.VarChar(255)
+  role           Role             @default(member)
   posts          post[]
   user_post_like user_post_like[]
 }
@@ -41,4 +42,9 @@ model user_post_like {
 
   @@id([user_id, post_id])
   @@index([post_id], map: "fk_post")
+}
+
+enum Role {
+  member
+  admin
 }
