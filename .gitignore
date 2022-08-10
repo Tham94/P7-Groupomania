@@ -1,9 +1,24 @@
-backend/node_modules
-frontend/node_modules
-.vscode
-backend/.env
-backend/package-lock.json
+# dependencies
 *.json
 node_modules
+backend/node_modules
+!backend/package.json
+backend/package-lock.json
+frontend/node_modules
+frontend/.pnp
+frontend/pnp.js
+!frontend/package.json
+
+# testing
+frontend/src/__tests__
+
+# production
+frontend/build
+
+# misc
 backend/images/*
 !backend/images/.keep
+.vscode
+backend/.env
+frontend/.env.local
+frontend/npm-debug.log*
