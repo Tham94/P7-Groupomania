@@ -1,0 +1,9 @@
+a {
+  text-decoration: none;
+}
+
+* {
+  @include x-box-sizing;
+  font-family: 'Lato', Arial, Helvetica, sans-serif;
+  list-style: none;
+}
