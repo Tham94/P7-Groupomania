@@ -1,0 +1,13 @@
+/**** MEDIA QUERIES ****/
+
+@mixin mobile-screen {
+  @media screen and (max-width: map-get($breakpoints, mobile)) {
+    @content;
+  }
+}
+
+@mixin tablet-screen {
+  @media screen and (max-width: map-get($breakpoints, tablet)) {
+    @content;
+  }
+}

@@ -5,10 +5,11 @@
 @import './utils/variables.scss';
 @import './base/general';
 @import './utils/mixins';
-@import './components/banner';
+@import './base/app';
+@import './components/header';
+@import './components/login-form.scss';
+
 /*
-@import './components/';
-@import './';
 @import './';
 @import './';
 @import './';

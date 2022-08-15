@@ -1,0 +1,69 @@
+.Header {
+  display: flex;
+  justify-content: space-between;
+  @include tablet-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 15%;
+    border-right: 1px solid $color-secondary;
+  }
+  &__logo-container {
+    width: 50%;
+    @include tablet-screen {
+      width: 100%;
+    }
+  }
+  &__logo-pic {
+    width: 50%;
+    padding: 10px;
+    @include tablet-screen {
+      display: none;
+    }
+  }
+  & > nav {
+    padding: 10px;
+    @include tablet-screen {
+      height: 100%;
+    }
+  }
+  &__nav-list {
+    display: flex;
+    justify-content: space-around;
+    color: $color-tertiary;
+    margin: 0;
+
+    @include tablet-screen {
+      flex-direction: column;
+      padding: 0px;
+    }
+    > li {
+      padding: 10px;
+      &:hover {
+        color: $color-primary;
+        text-shadow: 1px 1px $color-secondary;
+      }
+      & > i {
+        display: none;
+      }
+      @include tablet-screen {
+        padding: 20px 0;
+        text-align: center;
+        padding: 0%;
+        margin: 20px 0;
+
+        & > p {
+          display: none;
+        }
+        & > i {
+          display: contents;
+          text-align: center;
+          font-size: x-large;
+          @include mobile-screen {
+            font-size: medium;
+          }
+        }
+      }
+    }
+  }
+}
