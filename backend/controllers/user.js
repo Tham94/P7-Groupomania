@@ -28,9 +28,6 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   const user = await prisma.user.findUnique({ where: { email: email } });
-  const admin = await prisma.user.findMany({
-    where: { role: 'admin' },
-  });
 
   try {
     if (!user) {
@@ -42,29 +39,16 @@ exports.login = async (req, res) => {
           if (!valid) {
             return res.status(403).json({ error: 'Invalid password' });
           }
-          if (user.email == admin[0].email) {
-            res.status(201).json({
-              adminId: user.id,
-              token: jwt.sign(
-                { adminId: user.id },
-                process.env.SECRET_KEY_SALTED,
-                {
-                  expiresIn: '24h',
-                }
-              ),
-            });
-          } else {
-            res.status(201).json({
-              userId: user.id,
-              token: jwt.sign(
-                { userId: user.id },
-                process.env.SECRET_KEY_SALTED,
-                {
-                  expiresIn: '24h',
-                }
-              ),
-            });
-          }
+          res.status(201).json({
+            role: user.role,
+            token: jwt.sign(
+              { userId: user.id, role: user.role },
+              process.env.SECRET_KEY_SALTED,
+              {
+                expiresIn: '24h',
+              }
+            ),
+          });
         })
         .catch((error) => res.status(400).json({ error }));
     }
@@ -75,7 +59,7 @@ exports.login = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   const { id } = req.params;
-  const authUser = req.auth.authorId;
+  const authUser = req.auth.userId;
   /* Récupération de tous les Urls des images dans un tableau avant suppression */
   const allPostsOfUser = await prisma.post.findMany({
     where: { authorId: authUser },

@@ -5,10 +5,10 @@ module.exports = (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_KEY_SALTED); // salt the secret key with base64
     const userId = decodedToken.userId;
-    const adminId = decodedToken.adminId;
+    const role = decodedToken.role;
     req.auth = {
       userId: userId,
-      adminId: adminId,
+      role: role,
     };
     next();
   } catch {

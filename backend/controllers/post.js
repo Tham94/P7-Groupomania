@@ -45,38 +45,34 @@ exports.getOnePost = async (req, res) => {
  *
  */
 exports.createPost = async (req, res) => {
-  const { title, content, authorId } = req.body;
+  const { title, content } = req.body;
   const image = req.file;
-  const authUser = req.auth.authorId;
+  const authUser = req.auth.userId;
   try {
-    if (authUser === parseInt(authorId)) {
-      image === undefined
-        ? await prisma.post.create({
-            data: {
-              authorId: authUser,
-              title: title,
-              content: content,
-              likes: 0,
-              dislikes: 0,
-            },
-          })
-        : await prisma.post.create({
-            data: {
-              authorId: authUser,
-              title: title,
-              content: content,
-              imageUrl: `${req.protocol}://${req.get('host')}/images/${
-                req.file.filename
-              }`,
-              likes: 0,
-              dislikes: 0,
-            },
-          });
+    image === undefined
+      ? await prisma.post.create({
+          data: {
+            authorId: authUser,
+            title: title,
+            content: content,
+            likes: 0,
+            dislikes: 0,
+          },
+        })
+      : await prisma.post.create({
+          data: {
+            authorId: authUser,
+            title: title,
+            content: content,
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${
+              req.file.filename
+            }`,
+            likes: 0,
+            dislikes: 0,
+          },
+        });
 
-      res.status(201).json({ message: 'You have sent a post successfully!' });
-    } else {
-      res.status(403).json({ message: 'Unauthorized user for posting' });
-    }
+    res.status(201).json({ message: 'You have sent a post successfully!' });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -90,16 +86,16 @@ exports.createPost = async (req, res) => {
  * - modifier l'image postée
  */
 exports.updatePost = async (req, res) => {
-  const authUser = req.auth.authorId;
-  const admin = req.auth.adminId;
+  const authUser = req.auth.userId;
+  const role = req.auth.role;
   const { id } = req.params;
   const post = await prisma.post.findUnique({ where: { id: parseInt(id) } });
-  const { authorId, title, content } = req.body;
+  const { title, content } = req.body;
   const image = req.file;
 
   try {
     if (post !== null) {
-      if (authUser === parseInt(authorId) || admin !== undefined) {
+      if (authUser === post.authorId || role === 'admin') {
         if (image === undefined) {
           await prisma.post.update({
             where: { id: parseInt(id) },
@@ -136,12 +132,11 @@ exports.updatePost = async (req, res) => {
                 }
               );
         }
-        res.status(201).json({ message: 'Post updated successfully' });
       } else {
-        res
-          .status(403)
-          .json({ message: `Unauthorized user to update the post ${id}` });
+        res.status(403).json({ message: 'Not authorized to update the post' });
       }
+
+      res.status(201).json({ message: 'Post updated successfully' });
     } else {
       res.status(404).json({ message: 'Post not found' });
     }
@@ -158,14 +153,13 @@ exports.updatePost = async (req, res) => {
  * - avec image
  */
 exports.deletePost = async (req, res) => {
-  const authUser = req.auth.authorId;
-  const admin = req.auth.adminId;
+  const authUser = req.auth.userId;
+  const role = req.auth.role;
   const postId = parseInt(req.params.id);
-  const { authorId } = req.body;
   const post = await prisma.post.findUnique({ where: { id: postId } });
   try {
     if (post !== null) {
-      if (parseInt(authorId) === authUser || admin !== undefined) {
+      if (authUser === post.authorId || role === 'admin') {
         post.imageUrl === null
           ? await prisma.post.delete({ where: { id: postId } })
           : fs.unlink(
@@ -178,7 +172,7 @@ exports.deletePost = async (req, res) => {
           .status(200)
           .json({ message: `Post with id ${postId} was deleted successfully` });
       } else {
-        res.status(403).json({ message: 'Unauthorized user for posting' });
+        res.status(403).json({ message: 'Not authorized to delete the post' });
       }
     } else {
       res.status(404).json({ message: 'Post not found' });
@@ -199,8 +193,8 @@ exports.deletePost = async (req, res) => {
  *
  */
 exports.likePost = async (req, res) => {
-  const authUser = req.auth.authorId;
-  const { authorId, like } = req.body;
+  const authUser = req.auth.userId;
+  const { like } = req.body;
   const postId = parseInt(req.params.id);
   const post = await prisma.post.findUnique({ where: { id: postId } });
   // Checker dans la table de liaison si le user a déja liké/disliké le post
@@ -216,80 +210,76 @@ exports.likePost = async (req, res) => {
 
   try {
     if (post !== null) {
-      if (authUser === authorId) {
-        switch (like) {
-          case 1:
-            if (checkLikeStatus === -1) {
-              await prisma.user_post_like.create({
-                data: {
-                  user_id: authUser,
-                  post_id: postId,
-                  likes: true,
-                },
-              });
-              await prisma.post.update({
-                where: { id: postId },
-                data: { likes: { increment: 1 } },
-              });
-              res.status(201).json({ message: `You liked the post ${postId}` });
-            } else {
-              res
-                .status(400)
-                .json({ message: 'You have already liked that post' });
-            }
-            break;
-          case -1:
-            if (checkDislikeStatus === -1) {
-              await prisma.user_post_like.create({
-                data: {
-                  user_id: authUser,
-                  post_id: postId,
-                  likes: false,
-                },
-              });
-              await prisma.post.update({
-                where: { id: postId },
-                data: { dislikes: { increment: 1 } },
-              });
-              res
-                .status(201)
-                .json({ message: `You disliked the post ${postId}` });
-            } else {
-              res
-                .status(400)
-                .json({ message: 'You have already disliked that post' });
-            }
-            break;
-          case 0:
-            if (checkLikeStatus === 0) {
-              await prisma.user_post_like.deleteMany({
-                where: { user_id: authUser, post_id: postId, likes: true },
-              });
-              await prisma.post.update({
-                where: { id: postId },
-                data: { likes: { increment: -1 } },
-              });
-              res
-                .status(201)
-                .json({ message: 'You have removed your like successfully' });
-            }
+      switch (like) {
+        case 1:
+          if (checkLikeStatus === -1) {
+            await prisma.user_post_like.create({
+              data: {
+                user_id: authUser,
+                post_id: postId,
+                likes: true,
+              },
+            });
+            await prisma.post.update({
+              where: { id: postId },
+              data: { likes: { increment: 1 } },
+            });
+            res.status(201).json({ message: `You liked the post ${postId}` });
+          } else {
+            res
+              .status(400)
+              .json({ message: 'You have already liked that post' });
+          }
+          break;
+        case -1:
+          if (checkDislikeStatus === -1) {
+            await prisma.user_post_like.create({
+              data: {
+                user_id: authUser,
+                post_id: postId,
+                likes: false,
+              },
+            });
+            await prisma.post.update({
+              where: { id: postId },
+              data: { dislikes: { increment: 1 } },
+            });
+            res
+              .status(201)
+              .json({ message: `You disliked the post ${postId}` });
+          } else {
+            res
+              .status(400)
+              .json({ message: 'You have already disliked that post' });
+          }
+          break;
+        case 0:
+          if (checkLikeStatus === 0) {
+            await prisma.user_post_like.deleteMany({
+              where: { user_id: authUser, post_id: postId, likes: true },
+            });
+            await prisma.post.update({
+              where: { id: postId },
+              data: { likes: { increment: -1 } },
+            });
+            res
+              .status(201)
+              .json({ message: 'You have removed your like successfully' });
+          }
 
-            if (checkDislikeStatus === 0) {
-              await prisma.user_post_like.deleteMany({
-                where: { user_id: authUser, post_id: postId, likes: false },
-              });
-              await prisma.post.update({
-                where: { id: postId },
-                data: { dislikes: { increment: -1 } },
-              });
-              res.status(201).json({
-                message: 'You have removed your dislike successfully',
-              });
-            }
-            break;
-        }
-      } else {
-        res.status(403).json({ message: 'Unauthorized user ' });
+          if (checkDislikeStatus === 0) {
+            await prisma.user_post_like.deleteMany({
+              where: { user_id: authUser, post_id: postId, likes: false },
+            });
+            await prisma.post.update({
+              where: { id: postId },
+              data: { dislikes: { increment: -1 } },
+            });
+            res.status(201).json({
+              message: 'You have removed your dislike successfully',
+            });
+          }
+          break;
       }
     } else {
       res.status(404).json({ message: `Post ${postId} is not found` });
