@@ -44,6 +44,7 @@
       &:hover {
         color: $color-primary;
         text-shadow: 1px 1px $color-secondary;
+        transition: ease-out 0.3s;
       }
       & > i {
         display: none;
