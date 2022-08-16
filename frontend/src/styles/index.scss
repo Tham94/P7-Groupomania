@@ -2,16 +2,16 @@
 
 @import './base/normalize';
 @import './base/box-sizing';
-@import './utils/variables.scss';
+@import './utils/variables';
 @import './base/general';
 @import './utils/mixins';
 @import './base/app';
 @import './components/header';
-@import './components/login-form.scss';
+@import './components/banner';
+@import './components/login-form';
+@import './components/footer';
 
 /*
-@import './';
-@import './';
 @import './';
 @import './';
 @import './';

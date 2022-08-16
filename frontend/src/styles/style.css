@@ -251,6 +251,10 @@ a {
 }
 
 /**** MEDIA QUERIES ****/
+.App {
+  margin-left: auto;
+  margin-right: auto;
+}
 @media screen and (max-width: 992px) {
   .App {
     display: flex;
@@ -304,7 +308,9 @@ a {
 @media screen and (max-width: 992px) {
   .Header__nav-list {
     flex-direction: column;
+    justify-content: flex-start;
     padding: 0px;
+    height: 100%;
   }
 }
 .Header__nav-list > li {
@@ -339,11 +345,45 @@ a {
   }
 }
 
+.Banner {
+  text-align: center;
+  color: #ffffff;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("team.jpg");
+  background-position: center;
+  background-size: cover;
+}
+.Banner__logo-container {
+  display: none;
+}
+@media screen and (max-width: 992px) {
+  .Banner__logo-container {
+    display: block;
+    height: 20%;
+    width: 100%;
+  }
+}
+@media screen and (max-width: 992px) {
+  .Banner__logo-img {
+    width: 100%;
+  }
+}
+.Banner__title {
+  font-size: xxx-large;
+  margin: 0%;
+}
+.Banner__description {
+  font-size: large;
+}
+
 .LoginFormLayout {
   height: 600px;
   width: 550px;
-  color: #ffffff;
-  background-color: #4e5166;
+  color: #fd2d01;
+  background-color: #ffd7d7;
 }
 .LoginFormLayout > h2 {
   padding: 20px;
@@ -367,9 +407,22 @@ a {
   margin: 5px 0px;
 }
 
+.Footer {
+  width: 100%;
+  height: 100px;
+  background-color: #4e5166;
+  color: #ffffff;
+  font-size: small;
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.Footer__list {
+  margin: 5px 0px;
+}
+
 /*
-@import './';
-@import './';
 @import './';
 @import './';
 @import './';
