@@ -1,5 +1,6 @@
 import '../styles/style.css';
 import logo from '../assets/logo_banner.png';
+import { NavLink } from 'react-router-dom';
 
 function Header() {
   return (
@@ -14,16 +15,37 @@ function Header() {
       <nav>
         <ul className="Header__nav-list">
           <li>
-            <p>Accueil</p>
-            <i class="fi fi-rr-home"></i>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive ? 'activeLink' : undefined
+              }
+            >
+              <p className="link-text">Accueil</p>
+              <i class="fi fi-rr-home"></i>
+            </NavLink>
           </li>
           <li>
-            <p>S'enregistrer</p>
-            <i class="fi fi-rr-sign-in-alt"></i>
+            <NavLink
+              to="/signup"
+              className={({ isActive }) =>
+                isActive ? 'activeLink' : undefined
+              }
+            >
+              <p className="link-text">S'enregistrer</p>
+              <i class="fi fi-rr-sign-in-alt"></i>
+            </NavLink>
           </li>
           <li>
-            <p>Contact</p>
-            <i class="fi fi-rr-envelope"></i>
+            <NavLink
+              to="/contact"
+              className={({ isActive }) =>
+                isActive ? 'activeLink' : undefined
+              }
+            >
+              <p className="link-text">Contact</p>
+              <i class="fi fi-rr-envelope"></i>
+            </NavLink>
           </li>
         </ul>
       </nav>

@@ -11,12 +11,12 @@ function Banner() {
           alt="banniere groupomania"
         ></img>
       </div>
-      <main className="Banner">
+      <div className="Banner">
         <h1 className="Banner__title">Let's share !</h1>
         <p className="Banner__description">
           Rejoignez vos collègues dans votre réseau social !
         </p>
-      </main>
+      </div>
     </>
   );
 }

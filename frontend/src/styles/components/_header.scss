@@ -6,6 +6,7 @@
     flex-direction: column;
     justify-content: flex-start;
     width: 15%;
+    height: 100%;
     border-right: 1px solid $color-secondary;
   }
   &__logo-container {
@@ -41,32 +42,41 @@
     }
     > li {
       padding: 10px;
-      &:hover {
-        color: $color-primary;
-        text-shadow: 1px 1px $color-secondary;
-        transition: ease-out 0.3s;
-      }
-      & > i {
-        display: none;
-      }
+
       @include tablet-screen {
         padding: 20px 0;
         text-align: center;
         padding: 0%;
         margin: 20px 0;
-
-        & > p {
-          display: none;
-        }
-        & > i {
-          display: contents;
-          text-align: center;
-          font-size: x-large;
-          @include mobile-screen {
-            font-size: medium;
-          }
-        }
+      }
+      > a :hover {
+        color: $color-primary;
+        text-shadow: 1px 1px $color-secondary;
+        transition: ease-out 0.3s;
       }
     }
   }
+}
+
+.link-text {
+  @include tablet-screen {
+    display: none;
+  }
+}
+
+.fi {
+  display: none;
+  @include tablet-screen {
+    display: contents;
+    text-align: center;
+    font-size: x-large;
+  }
+  @include mobile-screen {
+    font-size: medium;
+  }
+}
+
+.activeLink {
+  color: $color-primary;
+  font-weight: 700;
 }
