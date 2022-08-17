@@ -258,6 +258,7 @@ a {
 @media screen and (max-width: 992px) {
   .App {
     display: flex;
+    flex-wrap: wrap;
   }
 }
 
@@ -271,6 +272,7 @@ a {
     flex-direction: column;
     justify-content: flex-start;
     width: 15%;
+    height: 100%;
     border-right: 1px solid #ffd7d7;
   }
 }
@@ -316,14 +318,6 @@ a {
 .Header__nav-list > li {
   padding: 10px;
 }
-.Header__nav-list > li:hover {
-  color: #fd2d01;
-  text-shadow: 1px 1px #ffd7d7;
-  transition: ease-out 0.3s;
-}
-.Header__nav-list > li > i {
-  display: none;
-}
 @media screen and (max-width: 992px) {
   .Header__nav-list > li {
     padding: 20px 0;
@@ -331,19 +325,38 @@ a {
     padding: 0%;
     margin: 20px 0;
   }
-  .Header__nav-list > li > p {
+}
+.Header__nav-list > li > a :hover {
+  color: #fd2d01;
+  text-shadow: 1px 1px #ffd7d7;
+  transition: ease-out 0.3s;
+}
+
+@media screen and (max-width: 992px) {
+  .link-text {
     display: none;
   }
-  .Header__nav-list > li > i {
+}
+
+.fi {
+  display: none;
+}
+@media screen and (max-width: 992px) {
+  .fi {
     display: contents;
     text-align: center;
     font-size: x-large;
   }
 }
-@media screen and (max-width: 992px) and (max-width: 768px) {
-  .Header__nav-list > li > i {
+@media screen and (max-width: 768px) {
+  .fi {
     font-size: medium;
   }
+}
+
+.activeLink {
+  color: #fd2d01;
+  font-weight: 700;
 }
 
 .Banner {
@@ -357,14 +370,19 @@ a {
   background-position: center;
   background-size: cover;
 }
+@media screen and (max-width: 992px) {
+  .Banner {
+    width: 100%;
+  }
+}
 .Banner__logo-container {
   display: none;
 }
 @media screen and (max-width: 992px) {
   .Banner__logo-container {
     display: block;
-    height: 20%;
-    width: 100%;
+    height: 10%;
+    width: 50%;
   }
 }
 @media screen and (max-width: 992px) {
@@ -380,7 +398,7 @@ a {
   font-size: large;
 }
 
-.LoginFormLayout {
+.FormLayout {
   height: 500px;
   width: 550px;
   margin-left: auto;
@@ -391,7 +409,7 @@ a {
   color: #fd2d01;
   background-color: #ffd7d7;
 }
-.LoginFormLayout > h2 {
+.FormLayout > h2 {
   padding: 20px;
   margin: 0%;
   text-align: center;
@@ -403,13 +421,15 @@ a {
   border-radius: 10px;
   width: 80%;
   margin: auto;
+  padding: 20px;
   height: 70%;
+  display: flex;
+  flex-direction: column;
 }
 .Form > div {
   display: flex;
   flex-direction: column;
   padding: 10px;
-  margin: 10px 10px;
 }
 .Form label {
   margin: 5px 0px;
@@ -421,6 +441,7 @@ a {
   align-self: center;
   height: 30px;
   width: 60%;
+  margin: 20px 0px;
   border: 1px solid #4e5166;
   border-radius: 20px;
   background-color: #ffd7d7;
@@ -432,16 +453,6 @@ a {
   background-color: #fd2d01;
   box-shadow: 0px 5px 10px rgba(200, 200, 200, 0.8);
   transition: ease-out 0.6s;
-}
-.Form__checkbox {
-  flex-direction: row !important;
-}
-.Form__checkbox-remember {
-  width: fit-content;
-}
-.Form__checkbox > input {
-  height: auto;
-  margin: 0px 10px;
 }
 
 .Footer {
@@ -470,8 +481,28 @@ a {
   text-align: center;
 }
 
+.ContactFormLayout {
+  height: 500px;
+  width: 550px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  color: #fd2d01;
+  background-color: #ffd7d7;
+}
+.ContactFormLayout > h2 {
+  padding: 20px;
+  margin: 0%;
+  text-align: center;
+}
+
+.Form__description-field > input {
+  height: 100px;
+}
+
 /*
-@import './';
 @import './';
 @import './';
 */
