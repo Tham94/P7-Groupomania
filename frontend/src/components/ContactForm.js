@@ -17,15 +17,14 @@ function ContactForm() {
         </div>
         <div className="Form__description-field">
           <label for="description">Message * :</label>
-          <input
-            type="text"
+          <textarea
             id="description"
             name="description"
             required
             minlength="8"
             maxlength="500"
             placeholder="Décrivez votre problème (500 caractères max.)"
-          />
+          ></textarea>
         </div>
 
         <div>

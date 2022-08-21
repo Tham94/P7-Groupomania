@@ -15,8 +15,10 @@
   }
 }
 
-.Form__description-field {
-  > input {
-    height: 100px;
+#description {
+  height: 100px;
+  &::placeholder {
+    font-style: italic;
+    font-size: small;
   }
 }
