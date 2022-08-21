@@ -1,4 +1,6 @@
 @charset "UTF-8";
+/**** colors ****/
+/**** breakpoints ****/
 article,
 aside,
 details,
@@ -215,6 +217,7 @@ input::-moz-focus-inner {
 textarea {
   overflow: auto;
   vertical-align: top;
+  resize: none;
 }
 
 table {
@@ -236,8 +239,6 @@ input[type=checkbox], input[type=radio] {
   padding: 0;
 }
 
-/**** colors ****/
-/**** breakpoints ****/
 a {
   text-decoration: none;
 }
@@ -248,6 +249,10 @@ a {
   box-sizing: border-box;
   font-family: "Lato", Arial, Helvetica, sans-serif;
   list-style: none;
+}
+*::selection {
+  color: #fd2d01;
+  background-color: #ffd7d7;
 }
 
 /**** MEDIA QUERIES ****/
@@ -437,6 +442,15 @@ a {
 .Form input {
   height: 30px;
 }
+.Form input::placeholder {
+  font-style: italic;
+  font-size: small;
+}
+.Form__alert {
+  color: red;
+  font-size: small;
+  font-weight: 700;
+}
 .Form__submit-button {
   align-self: center;
   height: 30px;
@@ -451,8 +465,14 @@ a {
 .Form__submit-button:hover {
   color: #ffffff;
   background-color: #fd2d01;
-  box-shadow: 0px 5px 10px rgba(200, 200, 200, 0.8);
-  transition: ease-out 0.6s;
+  box-shadow: 0 3px #4e5166;
+  transition: ease-out 0.3s;
+}
+.Form__submit-button:active {
+  transition: ease-in 0.1s;
+  transform: translateY(3px);
+  box-shadow: none;
+  color: #4e5166;
 }
 
 .Footer {
@@ -498,8 +518,12 @@ a {
   text-align: center;
 }
 
-.Form__description-field > input {
+#description {
   height: 100px;
+}
+#description::placeholder {
+  font-style: italic;
+  font-size: small;
 }
 
 /*

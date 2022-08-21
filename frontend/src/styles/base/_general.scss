@@ -6,4 +6,8 @@ a {
   @include x-box-sizing;
   font-family: 'Lato', Arial, Helvetica, sans-serif;
   list-style: none;
+  &::selection {
+    color: $color-primary;
+    background-color: $color-secondary;
+  }
 }

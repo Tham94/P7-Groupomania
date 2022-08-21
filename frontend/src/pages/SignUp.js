@@ -1,13 +1,11 @@
-import '../styles/style.css';
-
 import Banner from '../components/Banner';
-import Form from '../components/Form';
+import FormSign from '../components/Form';
 
 function SignUp() {
   return (
     <>
       <Banner />
-      <Form title="Rejoindre la communauté" btnText="S'enregistrer" />
+      <FormSign title="Rejoindre la communauté" btnText="S'enregistrer" />
     </>
   );
 }

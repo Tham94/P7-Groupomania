@@ -35,12 +35,15 @@
   }
   input {
     height: 30px;
+    &::placeholder {
+      font-style: italic;
+      font-size: small;
+    }
   }
   &__alert {
-    &--email {
-    }
-    &--password {
-    }
+    color: red;
+    font-size: small;
+    font-weight: 700;
   }
   &__submit-button {
     align-self: center;
@@ -55,8 +58,14 @@
     &:hover {
       color: $white;
       background-color: $color-primary;
-      box-shadow: 0px 5px 10px rgb(200 200 200 / 80%);
-      transition: ease-out 0.6s;
+      box-shadow: 0 3px $color-tertiary;
+      transition: ease-out 0.3s;
+    }
+    &:active {
+      transition: ease-in 0.1s;
+      transform: translateY(3px);
+      box-shadow: none;
+      color: $color-tertiary;
     }
   }
 }
