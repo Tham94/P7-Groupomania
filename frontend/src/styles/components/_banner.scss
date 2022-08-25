@@ -12,19 +12,7 @@
   @include tablet-screen {
     width: 100%;
   }
-  &__logo-container {
-    display: none;
-    @include tablet-screen {
-      display: block;
-      height: 10%;
-      width: 50%;
-    }
-  }
-  &__logo-img {
-    @include tablet-screen {
-      width: 100%;
-    }
-  }
+
   &__title {
     font-size: xxx-large;
     margin: 0%;

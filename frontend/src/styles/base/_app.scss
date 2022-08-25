@@ -3,6 +3,6 @@
   margin-right: auto;
   @include tablet-screen {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
   }
 }
