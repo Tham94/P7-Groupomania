@@ -1,24 +1,50 @@
 .ContactFormLayout {
   height: 500px;
-  width: 550px;
+  width: 50%;
+  max-width: 600px;
+  margin: 15px 0px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  color: $color-primary;
+  border-radius: 20px;
+  color: $color-tertiary;
   background-color: $color-secondary;
+
+  @include tablet-screen {
+    width: 70%;
+  }
+  @include mobile-screen {
+    width: 90%;
+    max-width: 500px;
+  }
   > h2 {
-    padding: 20px;
+    padding: 5%;
     margin: 0%;
     text-align: center;
+  }
+}
+.Form {
+  padding: 5%;
+  > div {
+    padding: 10px;
+  }
+  @include mobile-screen {
+    padding: 2%;
+    height: 75%;
+
+    max-width: 350px;
+  }
+  &__submit-button {
+    max-width: 200px;
   }
 }
 
 #description {
   height: 100px;
+  @include mobile-screen {
+    height: 150px;
+  }
   &::placeholder {
     font-style: italic;
-    font-size: small;
+    font-size: 0.8em;
   }
 }

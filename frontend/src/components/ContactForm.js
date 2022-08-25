@@ -6,7 +6,7 @@ function ContactForm() {
       <h2>Contact</h2>
       <form method="POST" className="Form">
         <div className="Form__email-field">
-          <label for="email">E-mail* :</label>
+          <label htmlFor="email">E-mail* :</label>
           <input
             type="text"
             id="email"
@@ -16,13 +16,13 @@ function ContactForm() {
           />
         </div>
         <div className="Form__description-field">
-          <label for="description">Message * :</label>
+          <label htmlFor="description">Message * :</label>
           <textarea
             id="description"
             name="description"
             required
-            minlength="8"
-            maxlength="500"
+            minLength="8"
+            maxLength="500"
             placeholder="Décrivez votre problème (500 caractères max.)"
           ></textarea>
         </div>
