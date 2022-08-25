@@ -1,11 +1,11 @@
 import Banner from '../components/Banner';
-import FormSign from '../components/Form';
+import LoginForm from '../components/LoginForm';
 
 function Home() {
   return (
     <>
       <Banner />
-      <FormSign title="Connexion" btnText="Se connecter" />
+      <LoginForm />
     </>
   );
 }

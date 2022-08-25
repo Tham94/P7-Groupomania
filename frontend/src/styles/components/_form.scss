@@ -1,15 +1,25 @@
 .FormLayout {
   height: 500px;
-  width: 550px;
+  width: 50%;
+  max-width: 600px;
+  margin: 15px 0px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  color: $color-primary;
+  border-radius: 20px;
+  color: $color-tertiary;
   background-color: $color-secondary;
+
+  @include tablet-screen {
+    width: 70%;
+    height: 450px;
+    max-width: 450px;
+  }
+  @include mobile-screen {
+    height: 400px;
+    width: 90%;
+  }
   > h2 {
-    padding: 20px;
+    padding: 5%;
     margin: 0%;
     text-align: center;
   }
@@ -18,43 +28,61 @@
 .Form {
   color: $black;
   background-color: $white;
-  border-radius: 10px;
+  border-radius: 20px;
   width: 80%;
   margin: auto;
-  padding: 20px;
+  padding: 5% 10%;
   height: 70%;
   display: flex;
   flex-direction: column;
   > div {
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 10%;
   }
   label {
-    margin: 5px 0px;
+    margin: 10px 0px;
+    font-size: 1.1em;
+    @include tablet-screen {
+      font-size: 1em;
+    }
   }
   input {
     height: 30px;
     &::placeholder {
       font-style: italic;
-      font-size: small;
+      @include tablet-screen {
+        font-size: 0.8em;
+      }
     }
   }
   &__alert {
     color: red;
-    font-size: small;
     font-weight: 700;
+    @include tablet-screen {
+      font-size: 0.9em;
+    }
+    @include mobile-screen {
+      font-size: 0.7em;
+    }
   }
   &__submit-button {
     align-self: center;
     height: 30px;
     width: 60%;
-    margin: 20px 0px;
+    margin: auto;
     border: 1px solid $color-tertiary;
     border-radius: 20px;
     background-color: $color-secondary;
     color: $color-tertiary;
     box-shadow: 0px 3px 3px rgb(200 200 200 / 80%);
+    @include tablet-screen {
+      font-size: 1em;
+    }
+    @include mobile-screen {
+      font-size: 0.9em;
+      width: 70%;
+    }
     &:hover {
       color: $white;
       background-color: $color-primary;
