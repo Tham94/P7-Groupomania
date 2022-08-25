@@ -22,7 +22,7 @@ function Header() {
               }
             >
               <p className="link-text">Accueil</p>
-              <i class="fi fi-rr-home"></i>
+              <i className="fi fi-rr-home"></i>
             </NavLink>
           </li>
           <li>
@@ -33,7 +33,7 @@ function Header() {
               }
             >
               <p className="link-text">S'enregistrer</p>
-              <i class="fi fi-rr-sign-in-alt"></i>
+              <i className="fi fi-rr-sign-in-alt"></i>
             </NavLink>
           </li>
           <li>
@@ -44,7 +44,7 @@ function Header() {
               }
             >
               <p className="link-text">Contact</p>
-              <i class="fi fi-rr-envelope"></i>
+              <i className="fi fi-rr-envelope"></i>
             </NavLink>
           </li>
         </ul>
