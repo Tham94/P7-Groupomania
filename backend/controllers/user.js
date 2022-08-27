@@ -17,9 +17,11 @@ exports.signup = async (req, res) => {
             },
           });
 
-          res.status(201).json({ message: `${email} has joined the network` });
+          res.status(201).json({ message: `${email} a rejoind le réseau` });
         })
-      : res.status(401).json({ message: `User ${email} is already signed` });
+      : res
+          .status(401)
+          .json({ message: `L'utilisateur ${email} est déjà inscrit` });
   } catch (error) {
     res.status(500).json({ error });
   }
@@ -31,13 +33,13 @@ exports.login = async (req, res) => {
 
   try {
     if (!user) {
-      return res.status(404).json({ error: `User ${email} is not found !` });
+      return res.status(404).json({ message: ` ${email} n'existe pas !` });
     } else {
       bcrypt
         .compare(password, user.password)
         .then((valid) => {
           if (!valid) {
-            return res.status(403).json({ error: 'Invalid password' });
+            return res.status(403).json({ message: 'Mot de passe incorrect' });
           }
           res.status(201).json({
             role: user.role,
@@ -80,12 +82,14 @@ exports.deleteUser = async (req, res) => {
       }
       await prisma.user.delete({ where: { id: authUser } });
       res.status(200).json({
-        message: `User ${id} account was deleted successfully`,
+        message: `Le compte de l'utilisateur n° ${id} a bien été supprimé`,
       });
     } else {
       res
         .status(403)
-        .json({ message: 'Unauthorized user for deleting his account ' });
+        .json({
+          message: 'Utilisateur non autorisé pour supprimer ce compte ',
+        });
     }
   } catch (error) {
     res.status(500).json({ error });

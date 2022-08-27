@@ -33,7 +33,7 @@ exports.getOnePost = async (req, res) => {
 
     post
       ? res.status(200).json(post)
-      : res.status(404).json({ message: 'Post not found' });
+      : res.status(404).json({ message: "Ce post n'existe pas" });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -72,7 +72,7 @@ exports.createPost = async (req, res) => {
           },
         });
 
-    res.status(201).json({ message: 'You have sent a post successfully!' });
+    res.status(201).json({ message: 'Vous avez bien posté votre message' });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -133,12 +133,14 @@ exports.updatePost = async (req, res) => {
               );
         }
       } else {
-        res.status(403).json({ message: 'Not authorized to update the post' });
+        res
+          .status(403)
+          .json({ message: 'Non autorisé pour modifier ce message' });
       }
 
-      res.status(201).json({ message: 'Post updated successfully' });
+      res.status(201).json({ message: 'Le message a bien été modifié' });
     } else {
-      res.status(404).json({ message: 'Post not found' });
+      res.status(404).json({ message: 'Post inconnu' });
     }
   } catch (error) {
     res.status(500).json({ error });
@@ -170,12 +172,12 @@ exports.deletePost = async (req, res) => {
             );
         res
           .status(200)
-          .json({ message: `Post with id ${postId} was deleted successfully` });
+          .json({ message: `Le message n° ${postId} a bien été supprimé` });
       } else {
-        res.status(403).json({ message: 'Not authorized to delete the post' });
+        res.status(403).json({ message: 'Non autorisé' });
       }
     } else {
-      res.status(404).json({ message: 'Post not found' });
+      res.status(404).json({ message: 'Message inconnu' });
     }
   } catch (error) {
     res.status(500).json(error);
@@ -224,11 +226,13 @@ exports.likePost = async (req, res) => {
               where: { id: postId },
               data: { likes: { increment: 1 } },
             });
-            res.status(201).json({ message: `You liked the post ${postId}` });
+            res
+              .status(201)
+              .json({ message: `Vous venez de liker le message n° ${postId}` });
           } else {
             res
               .status(400)
-              .json({ message: 'You have already liked that post' });
+              .json({ message: 'Vous avez déjà liké ce messsage' });
           }
           break;
         case -1:
@@ -246,11 +250,11 @@ exports.likePost = async (req, res) => {
             });
             res
               .status(201)
-              .json({ message: `You disliked the post ${postId}` });
+              .json({ message: `Vous avez disliké le message n° ${postId}` });
           } else {
             res
               .status(400)
-              .json({ message: 'You have already disliked that post' });
+              .json({ message: 'Vous avez déjà disliké ce messsage' });
           }
           break;
         case 0:
@@ -264,7 +268,7 @@ exports.likePost = async (req, res) => {
             });
             res
               .status(201)
-              .json({ message: 'You have removed your like successfully' });
+              .json({ message: 'Vous avez bien retiré votre like' });
           }
 
           if (checkDislikeStatus === 0) {
@@ -276,13 +280,15 @@ exports.likePost = async (req, res) => {
               data: { dislikes: { increment: -1 } },
             });
             res.status(201).json({
-              message: 'You have removed your dislike successfully',
+              message: 'Vous avez bien retiré votre dislike',
             });
           }
           break;
       }
     } else {
-      res.status(404).json({ message: `Post ${postId} is not found` });
+      res
+        .status(404)
+        .json({ message: `Le message n° ${postId} n\est pas trouvé` });
     }
   } catch (error) {
     res.status(500).json({ error });

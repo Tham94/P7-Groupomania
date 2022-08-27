@@ -27,7 +27,7 @@ module.exports = (req, res, next) => {
     next();
   } else {
     res.status(400).json({
-      message: `the password is not valid for theses reasons: ${passwordSchema.validate(
+      message: `Le mot de passe n'est pas valide pour ces raisons : ${passwordSchema.validate(
         req.body.password,
         { list: true }
       )}`,
