@@ -1,0 +1,90 @@
+.Profile {
+  &__layout {
+    width: 70%;
+    max-width: 700px;
+    margin: 10px 0%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px $color-primary solid;
+    border-radius: 20px;
+    background-color: $color-secondary;
+    color: $color-tertiary;
+    @include mobile-screen {
+      width: 90%;
+      max-width: 470px;
+    }
+  }
+  &__title {
+    @include mobile-screen {
+      font-size: 1.4em;
+    }
+  }
+  &__pic-container {
+    width: 75%;
+    overflow: hidden;
+    @include mobile-screen {
+      width: 85%;
+    }
+  }
+  &__pic {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+  &__user {
+    width: 100%;
+    padding: 25px 0%;
+    display: flex;
+    flex-direction: column;
+    @include mobile-screen {
+      font-size: 0.9em;
+      padding: 10px 0%;
+    }
+  }
+  &__user-details {
+    margin: 5px 0px;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    // text-decoration: underline;
+    @include mobile-screen {
+      width: 85%;
+    }
+  }
+}
+
+.User__details-name {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.User {
+  &__name,
+  &__last-name,
+  &__email {
+    font-weight: 700;
+  }
+}
+.Modifying-icon {
+  &:hover {
+    cursor: pointer;
+    color: $color-primary;
+  }
+}
+
+.Unsuscribe {
+  margin: 5px 0px;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 00.85em;
+  font-weight: 700;
+  &:hover {
+    cursor: pointer;
+    color: $color-primary;
+    text-decoration: underline;
+  }
+}
