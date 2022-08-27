@@ -19,9 +19,11 @@ function LoginForm() {
         withCredentials: true,
         data: { email, password },
       });
-      //  window.location = '/forum';
-    } catch (err) {
-      console.log(err.response.data.message);
+      window.location = '/forum';
+    } catch (res) {
+      const apiError = document.getElementById('Form__alert--backend');
+      const errorMsg = res.response.data.message;
+      apiError.innerHTML = errorMsg;
     }
   };
   return (
@@ -42,13 +44,6 @@ function LoginForm() {
 
           if (!values.password) {
             errors.password = 'Vous devez entrer un mot de passe';
-          } else if (
-            !values.password.match(
-              /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]{2})(?=.{8,50})/
-            )
-          ) {
-            errors.password =
-              'Doit contenir 8 caractères dont 1 majuscule, 1 minuscule et 2 chiffres';
           }
           return errors;
         }}
@@ -75,6 +70,7 @@ function LoginForm() {
             component="span"
             className="Form__alert"
           />
+          <p id="Form__alert--backend"></p>
           <button type="submit" className="Form__submit-button">
             Se connecter
           </button>

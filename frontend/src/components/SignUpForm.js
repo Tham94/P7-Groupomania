@@ -21,10 +21,12 @@ function SignUpForm() {
         withCredentials: true,
         data: { email, password },
       });
-      window.location = '/';
+      window.location = '/forum';
       setFormSubmit(true);
     } catch (res) {
-      console.log(res.response.data.message);
+      const apiError = document.getElementById('Form__alert--backend');
+      const errorMsg = res.response.data.message;
+      apiError.innerHTML = errorMsg;
     }
   };
   return (
@@ -88,8 +90,9 @@ function SignUpForm() {
                 component="span"
                 className="Form__alert"
               />
+              <p id="Form__alert--backend"></p>
               <button type="submit" className="Form__submit-button">
-                S'enregistrer
+                S'inscrire
               </button>
             </Form>
           </Formik>
