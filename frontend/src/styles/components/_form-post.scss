@@ -1,0 +1,119 @@
+.Forum__post-container {
+  height: 320px;
+  width: 60%;
+  max-width: 600px;
+  margin: 10px 0%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px $color-primary solid;
+  border-radius: 20px;
+  background-color: $color-secondary;
+  @include mobile-screen {
+    width: 90%;
+    max-width: 470px;
+  }
+}
+.Forum__post-h2 {
+  width: fit-content;
+  margin: 10px 0%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+  border-radius: 10px;
+  color: $color-primary;
+  background-color: $white;
+  @include mobile-screen {
+    font-size: 1.1em;
+  }
+}
+
+.Forum__post {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+  align-items: center;
+  @include tablet-screen {
+    width: 85%;
+    max-width: 450px;
+  }
+  @include mobile-screen {
+    width: 100%;
+    max-width: 400px;
+  }
+  &-title {
+    margin: 5px;
+    height: 30px;
+    width: 90%;
+    border: none;
+    border-radius: 10px;
+    box-shadow: inset 1px 1px $color-tertiary;
+    &:focus {
+      outline: $color-tertiary;
+    }
+    &::placeholder {
+      font-style: italic;
+    }
+    @include mobile-screen {
+      font-size: 0.9em;
+    }
+  }
+  &-content {
+    margin: 5px;
+    width: 100%;
+    height: 100px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: inset 1px 1px $color-tertiary;
+    &:focus {
+      outline: $color-tertiary;
+    }
+    &::placeholder {
+      font-style: italic;
+    }
+    @include mobile-screen {
+      font-size: 0.9em;
+    }
+  }
+  > label {
+    cursor: pointer;
+    margin: 5px 0;
+    padding: 5px;
+    background-color: $white;
+    color: $color-tertiary;
+    border: 1px solid $color-primary;
+    border-radius: 10px;
+  }
+  &-img {
+    position: absolute;
+    z-index: -1;
+    @include mobile-screen {
+      font-size: 0.8em;
+    }
+  }
+  &-submit {
+    width: 100px;
+    margin: 5px 0;
+    padding: 5px;
+    background-color: $color-tertiary;
+    color: $white;
+    border: 1px solid $color-tertiary;
+    border-radius: 10px;
+    box-shadow: 0px 1px 1px $color-primary;
+    &:hover {
+      color: $color-tertiary;
+      background-color: $color-primary;
+      box-shadow: 0 2px $color-tertiary;
+      transition: ease-out 0.3s;
+    }
+    &:active {
+      transition: ease-in 0.1s;
+      transform: translateY(2px);
+      box-shadow: none;
+      color: $color-tertiary;
+    }
+  }
+}

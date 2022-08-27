@@ -1,0 +1,125 @@
+.Display {
+  &__post {
+    width: 60%;
+    max-width: 600px;
+    margin: 10px 0%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px $color-tertiary solid;
+    border-radius: 20px;
+    background-color: $color-secondary;
+    color: $color-tertiary;
+    @include mobile-screen {
+      width: 90%;
+      max-width: 470px;
+    }
+  }
+
+  &__user-pic {
+    width: 15%;
+    overflow: hidden;
+    border: 2px solid $color-primary;
+    border-radius: 50%;
+    padding: 2px;
+    > img {
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+  &__post-header {
+    width: 90%;
+    margin: 10px 0%;
+    padding-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid $white;
+  }
+  &__post-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__post-title {
+    color: $color-tertiary;
+    text-shadow: 1px 1px darken($color: $color-tertiary, $amount: 1);
+  }
+  &__post-img-container {
+    width: 90%;
+    overflow: hidden;
+    > img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+  &__post-content {
+    width: 90%;
+    text-align: justify;
+    padding: 20px 0px;
+    border-bottom: 2px solid $white;
+  }
+}
+
+.Header {
+  width: 100%;
+  height: 10%;
+
+  &__post-user {
+    font-size: 0.9em;
+  }
+  &__post-date {
+    font-size: 0.8em;
+    font-style: italic;
+  }
+}
+
+.LikeOrNot {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 70%;
+  padding: 10px;
+}
+
+.Like-icon {
+  font-size: 1.3em;
+
+  &:hover {
+    color: $white;
+    cursor: pointer;
+    transform: scaleZ(2);
+  }
+  &:active {
+    color: $color-primary;
+  }
+}
+.Dislike {
+  position: relative;
+  top: 3px;
+}
+.Interacting__post {
+  width: 70%;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-around;
+}
+.Modifying__post-icon {
+  padding: 0% 10px;
+  &:hover {
+    cursor: pointer;
+    color: $color-primary;
+  }
+}
+
+.Deleting__post-icon {
+  padding: 0% 10px;
+
+  &:hover {
+    cursor: pointer;
+    color: $color-primary;
+  }
+}
