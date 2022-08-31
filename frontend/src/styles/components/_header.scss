@@ -60,10 +60,10 @@
   }
 }
 
-.fi {
+.ft-icon {
   display: none;
   @include tablet-screen {
-    display: contents;
+    display: block;
     text-align: center;
     font-size: 1.3em;
   }
