@@ -1,31 +1,44 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import axios from 'axios';
-
+import { useContext, useEffect, useState } from 'react';
+import Auth from '../contexts/Auth';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../services/AuthApi';
 /**
- * [Form description]
+ * [ Récupération du contexte; Utilisation d'un state pour récupérer l'erreur de l'API;
+ *   Redirection de l'utilisateur (connecté) vers le forum pour empecher d'accéder au login;
+ *   Exécution de la fonction handleLogin ]
  *
- *
- * @return  {[JSX.Element]}         [return description]
+ * @return  {[JSX.Element]}         [Formulaire Formik avec gestion de la validation des champs]
  */
 function LoginForm() {
+  const { isAuthenticated, setIsAuthenticated } = useContext(Auth);
+  const [apiError, setApiError] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/forum');
+    }
+  }, [navigate, isAuthenticated]);
+
+  /**
+   * [ Soumission du formulaire: redirection vers le forum si connecté ou affichage d'un message d'erreur ]
+   *
+   * @param   {[String]}  email     [ valeur de l'email ]
+   * @param   {[String]}  password  [ valeur du mot de passe ]
+   *
+   * @return  {[Boolean|String]}            [ retour de l'API (true si connecté/ erreur si échec) ]
+   */
   const handleLogin = async ({ email, password }) => {
-    try {
-      await axios({
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        url: `${process.env.REACT_APP_API_URL}api/auth/login`,
-        withCredentials: true,
-        data: { email, password },
-      });
-      window.location = '/forum';
-    } catch (res) {
-      const apiError = document.getElementById('Form__alert--backend');
-      const errorMsg = res.response.data.message;
-      apiError.innerHTML = errorMsg;
+    const loginResponse = await login({ email, password });
+    if (loginResponse === true) {
+      setIsAuthenticated(loginResponse);
+      navigate('/forum');
+    } else {
+      setApiError(loginResponse);
     }
   };
+
   return (
     <div className="FormLayout">
       <h2>Connexion</h2>
@@ -70,7 +83,9 @@ function LoginForm() {
             component="span"
             className="Form__alert"
           />
-          <p id="Form__alert--backend"></p>
+          {apiError !== undefined && (
+            <p id="Form__alert--backend">{apiError}</p>
+          )}
           <button type="submit" className="Form__submit-button">
             Se connecter
           </button>
