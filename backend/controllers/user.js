@@ -3,6 +3,15 @@ const jwt = require('jsonwebtoken');
 const prisma = require('../prisma/client');
 const fs = require('fs');
 
+exports.getUsers = async (req, res) => {
+  try {
+    const allUsers = await prisma.user.findMany();
+    res.status(200).json(allUsers);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
 exports.signup = async (req, res) => {
   const { email, password } = req.body;
   const signedUser = await prisma.user.findUnique({ where: { email: email } });
@@ -85,11 +94,9 @@ exports.deleteUser = async (req, res) => {
         message: `Le compte de l'utilisateur n° ${id} a bien été supprimé`,
       });
     } else {
-      res
-        .status(403)
-        .json({
-          message: 'Utilisateur non autorisé pour supprimer ce compte ',
-        });
+      res.status(403).json({
+        message: 'Utilisateur non autorisé pour supprimer ce compte ',
+      });
     }
   } catch (error) {
     res.status(500).json({ error });
