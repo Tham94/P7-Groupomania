@@ -4,9 +4,14 @@ import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext } from 'react';
 import Auth from '../contexts/Auth';
+import { logOut } from '../services/AuthApi';
 
 function Header() {
-  const { isAuthenticated } = useContext(Auth);
+  const { isAuthenticated, setIsAuthenticated } = useContext(Auth);
+  const handleLogOut = () => {
+    logOut();
+    setIsAuthenticated(false);
+  };
 
   return (
     <header className="Header">
@@ -23,13 +28,16 @@ function Header() {
             <>
               <li>
                 <NavLink
-                  to="/"
+                  to="/login"
                   className={({ isActive }) =>
                     isActive ? 'activeLink' : undefined
                   }
                 >
-                  <p className="link-text">Accueil</p>
-                  <FontAwesomeIcon icon="fas fa-house" className="ft-icon" />
+                  <p className="link-text">Connexion</p>
+                  <FontAwesomeIcon
+                    icon="fa-solid fa-house"
+                    className="ft-icon"
+                  />
                 </NavLink>
               </li>
               <li>
@@ -39,9 +47,9 @@ function Header() {
                     isActive ? 'activeLink' : undefined
                   }
                 >
-                  <p className="link-text">S'inscrire</p>
+                  <p className="link-text">Inscription</p>
                   <FontAwesomeIcon
-                    icon="fas fa-right-to-bracket"
+                    icon="fa-solid fa-right-to-bracket"
                     className="ft-icon"
                   />
                 </NavLink>
@@ -49,6 +57,17 @@ function Header() {
             </>
           ) : (
             <>
+              <li>
+                <NavLink
+                  to="/forum"
+                  className={({ isActive }) =>
+                    isActive ? 'activeLink' : undefined
+                  }
+                >
+                  <p className="link-text">Accueil</p>
+                  <FontAwesomeIcon icon="far fa-comments" className="ft-icon" />
+                </NavLink>
+              </li>
               <li>
                 <NavLink
                   to="/profile"
@@ -63,28 +82,18 @@ function Header() {
                   />
                 </NavLink>
               </li>
-              <li>
-                <NavLink
-                  to="/forum"
-                  className={({ isActive }) =>
-                    isActive ? 'activeLink' : undefined
-                  }
-                >
-                  <p className="link-text">Forum</p>
-                  <FontAwesomeIcon icon="far fa-comments" className="ft-icon" />
-                </NavLink>
-              </li>
 
               <li>
                 <NavLink
-                  to="/"
+                  to="/login"
                   className={({ isActive }) =>
                     isActive ? 'activeLink' : undefined
                   }
+                  onClick={handleLogOut}
                 >
                   <p className="link-text">Déconnexion</p>
                   <FontAwesomeIcon
-                    icon="fas fa-right-from-bracket"
+                    icon="fa-solid fa-right-from-bracket"
                     className="ft-icon"
                   />
                 </NavLink>
@@ -100,7 +109,10 @@ function Header() {
               }
             >
               <p className="link-text">Contact</p>
-              <FontAwesomeIcon icon="fas fa-envelope" className="ft-icon" />
+              <FontAwesomeIcon
+                icon="fa-solid fa-envelope"
+                className="ft-icon"
+              />
             </NavLink>
           </li>
         </ul>
