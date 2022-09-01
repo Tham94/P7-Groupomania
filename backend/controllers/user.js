@@ -52,6 +52,7 @@ exports.login = async (req, res) => {
           }
           res.status(201).json({
             role: user.role,
+            userId: user.id,
             token: jwt.sign(
               { userId: user.id, role: user.role },
               process.env.SECRET_KEY_SALTED,
