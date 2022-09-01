@@ -9,8 +9,11 @@ import { logOut } from '../services/AuthApi';
 function Header() {
   const { isAuthenticated, setIsAuthenticated } = useContext(Auth);
   const handleLogOut = () => {
-    logOut();
-    setIsAuthenticated(false);
+    const confirmation = window.confirm('Voulez-vous vous déconnecté?');
+    if (confirmation) {
+      logOut();
+      setIsAuthenticated(false);
+    }
   };
 
   return (
