@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import { getToken, addToken, removeToken } from './LocalStorage';
-import axios from 'axios';
+import AxiosClient from '../client/AxiosClient';
 
 /**
  * [Etat du token]
@@ -38,22 +38,20 @@ export function hasAuthenticated() {
  * @param   {[String]}  email     [ valeur de l'email ]
  * @param   {[String]}  password  [ valeur du mot de passe ]
  *
- * @return  {[Boolean|String]}      [ true si token obtenu / erreur si échec) ]
+ * @return  {[{Object}|String]}      [ Objet: {user: détails du user, success:réussite du login}  / message d'erreur si échec) ]
  */
 export async function login({ email, password }) {
   try {
-    const response = await axios({
+    const response = await AxiosClient({
       method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      url: `${process.env.REACT_APP_API_URL}api/auth/login`,
+      url: 'api/auth/login',
       withCredentials: true,
       data: { email, password },
     });
+    const user = response.data;
     const token = response.data.token;
     addToken('sessionToken', token);
-    return true;
+    return { user: user, success: true };
   } catch (err) {
     return err.response.data.message;
   }
