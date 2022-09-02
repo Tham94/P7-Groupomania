@@ -10,28 +10,31 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import { hasAuthenticated } from './services/AuthApi';
 import Auth from './contexts/Auth';
+import UserContext from './contexts/UserContext';
 import AuthenticatedRoute from './components/AuthenticatedRoute';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(hasAuthenticated());
-
+  const [user, setUser] = useState();
   return (
     <Auth.Provider value={{ isAuthenticated, setIsAuthenticated }}>
-      <div className="App">
-        <Layout>
-          <Routes>
-            <Route path="*" element={<Navigate to={'/login'} />} />
-            <Route exact path="/login" element={<Home />} />
-            <Route exact path="/signup" element={<SignUp />} />
-            <Route exact path="/contact" element={<Contact />} />
-            <Route element={<AuthenticatedRoute />}>
-              <Route exact path="/profile" element={<Profile />} />
-              <Route exact path="/forum" element={<Forum />} />
-              <Route exact path="/forum/:id" element={<DisplayPost />} />
-            </Route>
-          </Routes>
-        </Layout>
-      </div>
+      <UserContext.Provider value={{ user, setUser }}>
+        <div className="App">
+          <Layout>
+            <Routes>
+              <Route path="*" element={<Navigate to={'/login'} />} />
+              <Route exact path="/login" element={<Home />} />
+              <Route exact path="/signup" element={<SignUp />} />
+              <Route exact path="/contact" element={<Contact />} />
+              <Route element={<AuthenticatedRoute />}>
+                <Route exact path="/profile" element={<Profile />} />
+                <Route exact path="/forum" element={<Forum />} />
+                <Route exact path="/forum/:id" element={<DisplayPost />} />
+              </Route>
+            </Routes>
+          </Layout>
+        </div>
+      </UserContext.Provider>
     </Auth.Provider>
   );
 }

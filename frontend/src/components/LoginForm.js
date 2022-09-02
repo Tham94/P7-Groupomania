@@ -3,16 +3,21 @@ import { useContext, useEffect, useState } from 'react';
 import Auth from '../contexts/Auth';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/AuthApi';
+import UserContext from '../contexts/UserContext';
 /**
- * [ Récupération du contexte; Utilisation d'un state pour récupérer l'erreur de l'API;
- *   Redirection de l'utilisateur (connecté) vers le forum pour empecher d'accéder au login;
+ * [ Récupération du contexte d'authentification;
+ *   set du contexte user  {userId, role, token}
+ *   Utilisation d'un state pour récupérer l'erreur de l'API (échec login) et afficher dans le DOM;
+ *   Redirection de l'utilisateur (connecté) vers le forum pour l'empecher d'accéder au login;
  *   Exécution de la fonction handleLogin ]
  *
  * @return  {[JSX.Element]}         [Formulaire Formik avec gestion de la validation des champs]
  */
 function LoginForm() {
   const { isAuthenticated, setIsAuthenticated } = useContext(Auth);
+  const { setUser } = useContext(UserContext);
   const [apiError, setApiError] = useState('');
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,8 +36,10 @@ function LoginForm() {
    */
   const handleLogin = async ({ email, password }) => {
     const loginResponse = await login({ email, password });
-    if (loginResponse === true) {
-      setIsAuthenticated(loginResponse);
+    const userDetails = loginResponse.user;
+    if (loginResponse.success === true) {
+      setIsAuthenticated(loginResponse.success);
+      setUser(userDetails);
       navigate('/forum');
     } else {
       setApiError(loginResponse);
