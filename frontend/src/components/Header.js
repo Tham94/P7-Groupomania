@@ -5,9 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext } from 'react';
 import Auth from '../contexts/Auth';
 import { logOut } from '../services/AuthApi';
+import UserContext from '../contexts/UserContext';
 
 function Header() {
   const { isAuthenticated, setIsAuthenticated } = useContext(Auth);
+  const { user } = useContext(UserContext);
   const handleLogOut = () => {
     const confirmation = window.confirm('Voulez-vous vous déconnecté?');
     if (confirmation) {
@@ -73,7 +75,7 @@ function Header() {
               </li>
               <li>
                 <NavLink
-                  to="/profile"
+                  to={`/profile/${user.userId}`}
                   className={({ isActive }) =>
                     isActive ? 'activeLink' : undefined
                   }

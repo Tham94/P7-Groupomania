@@ -27,7 +27,7 @@ function App() {
               <Route exact path="/signup" element={<SignUp />} />
               <Route exact path="/contact" element={<Contact />} />
               <Route element={<AuthenticatedRoute />}>
-                <Route exact path="/profile" element={<Profile />} />
+                <Route exact path="/profile/:id" element={<Profile />} />
                 <Route exact path="/forum" element={<Forum />} />
                 <Route exact path="/forum/:id" element={<DisplayPost />} />
               </Route>
