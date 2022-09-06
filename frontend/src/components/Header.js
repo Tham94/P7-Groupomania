@@ -1,9 +1,9 @@
-import '../styles/style.css';
 import logo from '../assets/logo_banner.png';
 import { NavLink } from 'react-router-dom';
 import React, { useContext } from 'react';
 import Auth from '../contexts/Auth';
 import { logOut } from '../services/AuthApi';
+import { toast, Zoom } from 'react-toastify';
 
 function Header() {
   const { isAuthenticated, setIsAuthenticated } = useContext(Auth);
@@ -13,6 +13,16 @@ function Header() {
     if (confirmation) {
       logOut();
       setIsAuthenticated(false);
+      toast.info(`A bientôt ${user.name} 👋!`, {
+        position: 'top-right',
+        autoClose: 2000,
+        transition: Zoom,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 

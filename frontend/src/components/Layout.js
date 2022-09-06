@@ -1,5 +1,3 @@
-import '../styles/style.css';
-
 import Header from './Header';
 import Footer from './Footer';
 

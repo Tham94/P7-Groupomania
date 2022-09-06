@@ -1,6 +1,7 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import axios from 'axios';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import AxiosClient from '../client/AxiosClient';
 
 /**
  * [ Affichage du formulaire d'inscription avec soumission ]
@@ -22,17 +23,21 @@ function SignUpForm() {
    */
   const handleSignUp = async ({ email, password }) => {
     try {
-      await axios({
+      await AxiosClient({
         method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        url: `${process.env.REACT_APP_API_URL}api/auth/signup`,
+        url: 'api/auth/signup',
         withCredentials: true,
         data: { email, password },
       });
-      window.location = '/login';
       setFormSubmit(true);
+      toast.success(" Tu t'es bien enregistré 👍, connectes-toi !", {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: false,
+        pauseOnHover: false,
+        draggable: true,
+      });
+      window.location = '/login';
     } catch (res) {
       const errorMsg = res.response.data.message;
       setApiError(errorMsg);

@@ -1,5 +1,3 @@
-import '../styles/style.css';
-
 function ContactForm() {
   return (
     <div className="ContactFormLayout">

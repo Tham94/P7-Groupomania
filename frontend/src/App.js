@@ -1,3 +1,7 @@
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './styles/style.css';
+
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import SignUp from './pages/SignUp';
@@ -37,6 +41,7 @@ function App() {
           </Routes>
         </Layout>
       </div>
+      <ToastContainer />
     </Auth.Provider>
   );
 }

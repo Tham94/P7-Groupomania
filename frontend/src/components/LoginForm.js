@@ -3,6 +3,8 @@ import { useContext, useEffect, useState } from 'react';
 import Auth from '../contexts/Auth';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/AuthApi';
+import { toast } from 'react-toastify';
+
 /**
  * [ Récupération du contexte d'authentification;
  *   set du contexte user dans Auth  {userId, role,nom, prenom, email, token}
@@ -38,6 +40,13 @@ function LoginForm() {
       setIsAuthenticated(loginResponse.success);
       setUser(userDetails);
       navigate('/forum');
+      toast.success(`Bienvenue ${userDetails.name} !`, {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        pauseOnHover: false,
+        draggable: true,
+      });
     } else {
       setApiError(loginResponse);
     }
