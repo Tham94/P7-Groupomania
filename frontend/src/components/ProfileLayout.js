@@ -1,10 +1,17 @@
 import '../styles/style.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import UserContext from '../contexts/UserContext';
 import { useContext } from 'react';
+import Auth from '../contexts/Auth';
 
 function ProfileLayout() {
-  const { user } = useContext(UserContext);
+  const { user } = useContext(Auth);
+  const isAdmin = () => {
+    if (user.role === 'admin') {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <section className="Profile__layout">
       <h1 className="Profile__title">Votre Profil</h1>
@@ -21,10 +28,9 @@ function ProfileLayout() {
             <div>
               Prénom : <span className="User__name">{user.name}</span>
             </div>
-            <FontAwesomeIcon
-              icon="fa-solid fa-pencil"
-              className="Modifying-icon"
-            />
+            {!isAdmin() && (
+              <i className="fa-solid fa-pencil Modifying__post-icon"></i>
+            )}
           </div>
         </div>
         <div className="Profile__user-details">
@@ -32,19 +38,20 @@ function ProfileLayout() {
             <div>
               Nom : <span className="User__last-name">{user.lastName}</span>
             </div>
-            <FontAwesomeIcon
-              icon="fa-solid fa-pencil"
-              className="Modifying-icon"
-            />
+            {!isAdmin() && (
+              <i className="fa-solid fa-pencil Modifying__post-icon"></i>
+            )}
           </div>
         </div>
 
         <div className="Profile__user-details">
           E-mail : <span className="User__email">{user.email}</span>
         </div>
-        <button type="submit" className="Unsuscribe">
-          Se désinscrire
-        </button>
+        {!isAdmin() && (
+          <button type="submit" className="Unsuscribe">
+            Se désinscrire
+          </button>
+        )}
       </div>
     </section>
   );

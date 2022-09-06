@@ -1,15 +1,13 @@
 import '../styles/style.css';
 import logo from '../assets/logo_banner.png';
 import { NavLink } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext } from 'react';
 import Auth from '../contexts/Auth';
 import { logOut } from '../services/AuthApi';
-import UserContext from '../contexts/UserContext';
 
 function Header() {
   const { isAuthenticated, setIsAuthenticated } = useContext(Auth);
-  const { user } = useContext(UserContext);
+  const { user } = useContext(Auth);
   const handleLogOut = () => {
     const confirmation = window.confirm('Voulez-vous vous déconnecté?');
     if (confirmation) {
@@ -39,10 +37,7 @@ function Header() {
                   }
                 >
                   <p className="link-text">Connexion</p>
-                  <FontAwesomeIcon
-                    icon="fa-solid fa-house"
-                    className="ft-icon"
-                  />
+                  <i className="fa-solid fa-house ft-icon"></i>
                 </NavLink>
               </li>
               <li>
@@ -53,10 +48,7 @@ function Header() {
                   }
                 >
                   <p className="link-text">Inscription</p>
-                  <FontAwesomeIcon
-                    icon="fa-solid fa-right-to-bracket"
-                    className="ft-icon"
-                  />
+                  <i className="fa-solid fa-right-to-bracket ft-icon"></i>
                 </NavLink>
               </li>
             </>
@@ -70,7 +62,7 @@ function Header() {
                   }
                 >
                   <p className="link-text">Accueil</p>
-                  <FontAwesomeIcon icon="far fa-comments" className="ft-icon" />
+                  <i className="fas fa-comments ft-icon"></i>
                 </NavLink>
               </li>
               <li>
@@ -81,10 +73,7 @@ function Header() {
                   }
                 >
                   <p className="link-text">Profil</p>
-                  <FontAwesomeIcon
-                    icon="fa-solid fa-user"
-                    className="ft-icon"
-                  />
+                  <i className="far fa-user ft-icon"></i>
                 </NavLink>
               </li>
 
@@ -97,10 +86,7 @@ function Header() {
                   onClick={handleLogOut}
                 >
                   <p className="link-text">Déconnexion</p>
-                  <FontAwesomeIcon
-                    icon="fa-solid fa-right-from-bracket"
-                    className="ft-icon"
-                  />
+                  <i className="fa-solid fa-right-from-bracket ft-icon"></i>
                 </NavLink>
               </li>
             </>
@@ -114,10 +100,7 @@ function Header() {
               }
             >
               <p className="link-text">Contact</p>
-              <FontAwesomeIcon
-                icon="fa-solid fa-envelope"
-                className="ft-icon"
-              />
+              <i className="fa-solid fa-envelope ft-icon"></i>
             </NavLink>
           </li>
         </ul>
