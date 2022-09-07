@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import React, { useContext } from 'react';
 import Auth from '../contexts/Auth';
 import { logOut } from '../services/AuthApi';
-import { toast, Zoom } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 function Header() {
   const { isAuthenticated, setIsAuthenticated } = useContext(Auth);
@@ -13,10 +13,16 @@ function Header() {
     if (confirmation) {
       logOut();
       setIsAuthenticated(false);
-      toast.info(`A bientôt ${user.name} 👋!`, {
+      function userNotNull() {
+        if (user.name !== null) {
+          return user.name;
+        } else {
+          return '';
+        }
+      }
+      toast.info(`A bientôt ${userNotNull()} 👋!`, {
         position: 'top-right',
         autoClose: 2000,
-        transition: Zoom,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: false,

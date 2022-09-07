@@ -40,7 +40,14 @@ function LoginForm() {
       setIsAuthenticated(loginResponse.success);
       setUser(userDetails);
       navigate('/forum');
-      toast.success(`Bienvenue ${userDetails.name} !`, {
+      function userNotNull() {
+        if (userDetails.name !== null) {
+          return userDetails.name;
+        } else {
+          return '';
+        }
+      }
+      toast.success(`Bienvenue ${userNotNull()} !`, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,

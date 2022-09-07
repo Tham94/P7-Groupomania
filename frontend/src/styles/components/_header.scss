@@ -73,6 +73,6 @@
 }
 
 .activeLink {
-  color: $color-primary;
+  color: darken($color-primary, $amount: 10);
   font-weight: 700;
 }
