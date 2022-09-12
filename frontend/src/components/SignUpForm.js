@@ -81,6 +81,7 @@ function SignUpForm() {
               name="email"
               placeholder="Entrer votre E-mail"
               id="email"
+              autoFocus={true}
             />
             <ErrorMessage
               name="email"

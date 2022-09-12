@@ -77,14 +77,20 @@
 
 .Unsuscribe {
   margin: 5px 0px;
-  width: 75%;
+  width: 25%;
   margin-left: auto;
   margin-right: auto;
   font-size: 00.85em;
   font-weight: 700;
+  border: 1px solid $color-primary;
+  border-radius: 5px;
+  background-color: $white;
   &:hover {
     cursor: pointer;
     color: $color-primary;
-    text-decoration: underline;
+
+    &:active {
+      translate: 0px 1px;
+    }
   }
 }

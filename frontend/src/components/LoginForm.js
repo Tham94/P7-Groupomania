@@ -44,7 +44,8 @@ function LoginForm() {
         if (userDetails.name !== null) {
           return userDetails.name;
         } else {
-          return '';
+          const userEmail = userDetails.email.split('@');
+          return userEmail[0];
         }
       }
       toast.success(`Bienvenue ${userNotNull()} !`, {
@@ -89,6 +90,7 @@ function LoginForm() {
             name="email"
             placeholder="Entrer votre E-mail"
             id="email"
+            autoFocus={true}
           />
           <ErrorMessage name="email" component="span" className="Form__alert" />
           <label htmlFor="password">Mot de passe *</label>
@@ -109,6 +111,9 @@ function LoginForm() {
           <button type="submit" className="Form__submit-button">
             Se connecter
           </button>
+          <a href="./signup" className="Link-to-signup">
+            Je n'ai pas de compte
+          </a>
         </Form>
       </Formik>
     </div>
