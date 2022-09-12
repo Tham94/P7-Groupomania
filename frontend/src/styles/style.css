@@ -263,22 +263,20 @@ a {
 @media screen and (max-width: 992px) {
   .App {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
   }
 }
 
 .Header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 @media screen and (max-width: 992px) {
   .Header {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: 15%;
-    height: 100%;
-    border-right: 1px solid #ffd7d7;
+    width: 100%;
+    height: 15%;
+    border-bottom: 1px solid #ffd7d7;
   }
 }
 .Header__logo-container {
@@ -289,13 +287,19 @@ a {
     width: 100%;
   }
 }
+@media screen and (max-width: 768px) {
+  .Header__logo-container {
+    width: 50%;
+  }
+}
 .Header__logo-pic {
   width: 50%;
   padding: 10px;
 }
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 768px) {
   .Header__logo-pic {
-    display: none;
+    width: 80%;
+    padding: 20px 0%;
   }
 }
 .Header > nav {
@@ -312,14 +316,6 @@ a {
   color: #4e5166;
   margin: 0;
 }
-@media screen and (max-width: 992px) {
-  .Header__nav-list {
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 0px;
-    height: 100%;
-  }
-}
 .Header__nav-list > li {
   padding: 10px;
 }
@@ -328,7 +324,7 @@ a {
     padding: 20px 0;
     text-align: center;
     padding: 0%;
-    margin: 20px 0;
+    margin: 20px 10px;
   }
 }
 .Header__nav-list > li > a :hover {
@@ -343,24 +339,24 @@ a {
   }
 }
 
-.fi {
+.ft-icon {
   display: none;
 }
 @media screen and (max-width: 992px) {
-  .fi {
-    display: contents;
+  .ft-icon {
+    display: block;
     text-align: center;
-    font-size: x-large;
+    font-size: 1.3em;
   }
 }
 @media screen and (max-width: 768px) {
-  .fi {
-    font-size: medium;
+  .ft-icon {
+    font-size: 1.2em;
   }
 }
 
 .activeLink {
-  color: #fd2d01;
+  color: #ca2401;
   font-weight: 700;
 }
 
@@ -380,21 +376,6 @@ a {
     width: 100%;
   }
 }
-.Banner__logo-container {
-  display: none;
-}
-@media screen and (max-width: 992px) {
-  .Banner__logo-container {
-    display: block;
-    height: 10%;
-    width: 50%;
-  }
-}
-@media screen and (max-width: 992px) {
-  .Banner__logo-img {
-    width: 100%;
-  }
-}
 .Banner__title {
   font-size: xxx-large;
   margin: 0%;
@@ -405,17 +386,30 @@ a {
 
 .FormLayout {
   height: 500px;
-  width: 550px;
+  width: 50%;
+  max-width: 600px;
+  margin: 15px 0px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  color: #fd2d01;
+  border-radius: 20px;
+  color: #4e5166;
   background-color: #ffd7d7;
 }
+@media screen and (max-width: 992px) {
+  .FormLayout {
+    width: 70%;
+    height: 450px;
+    max-width: 450px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .FormLayout {
+    height: 400px;
+    width: 90%;
+  }
+}
 .FormLayout > h2 {
-  padding: 20px;
+  padding: 5%;
   margin: 0%;
   text-align: center;
 }
@@ -423,10 +417,10 @@ a {
 .Form {
   color: #000000;
   background-color: #ffffff;
-  border-radius: 10px;
+  border-radius: 20px;
   width: 80%;
   margin: auto;
-  padding: 20px;
+  padding: 5% 10%;
   height: 70%;
   display: flex;
   flex-direction: column;
@@ -434,33 +428,63 @@ a {
 .Form > div {
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 10%;
 }
 .Form label {
-  margin: 5px 0px;
+  margin: 10px 0px;
+  font-size: 1.1em;
+}
+@media screen and (max-width: 992px) {
+  .Form label {
+    font-size: 1em;
+  }
 }
 .Form input {
   height: 30px;
 }
 .Form input::placeholder {
   font-style: italic;
-  font-size: small;
+}
+@media screen and (max-width: 992px) {
+  .Form input::placeholder {
+    font-size: 0.8em;
+  }
 }
 .Form__alert {
   color: red;
-  font-size: small;
   font-weight: 700;
+}
+@media screen and (max-width: 992px) {
+  .Form__alert {
+    font-size: 0.9em;
+  }
+}
+@media screen and (max-width: 768px) {
+  .Form__alert {
+    font-size: 0.7em;
+  }
 }
 .Form__submit-button {
   align-self: center;
   height: 30px;
   width: 60%;
-  margin: 20px 0px;
+  margin: auto;
   border: 1px solid #4e5166;
   border-radius: 20px;
   background-color: #ffd7d7;
   color: #4e5166;
   box-shadow: 0px 3px 3px rgba(200, 200, 200, 0.8);
+}
+@media screen and (max-width: 992px) {
+  .Form__submit-button {
+    font-size: 1em;
+  }
+}
+@media screen and (max-width: 768px) {
+  .Form__submit-button {
+    font-size: 0.9em;
+    width: 70%;
+  }
 }
 .Form__submit-button:hover {
   color: #ffffff;
@@ -475,6 +499,24 @@ a {
   color: #4e5166;
 }
 
+.Link-to-signup {
+  align-self: center;
+}
+@media screen and (max-width: 768px) {
+  .Link-to-signup {
+    font-size: 0.9em;
+  }
+}
+
+#Form__alert--backend {
+  width: 100%;
+  text-align: center;
+  color: #fd2d01;
+  font-size: 1em;
+  font-weight: 700;
+  margin: auto;
+}
+
 .Footer {
   width: 100%;
   height: 100px;
@@ -487,6 +529,7 @@ a {
   width: 100%;
   height: 100%;
   margin: 0%;
+  padding: 0%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -496,39 +539,522 @@ a {
     flex-direction: column;
   }
 }
+@media screen and (max-width: 768px) {
+  .Footer ul {
+    align-items: flex-start;
+  }
+}
 .Footer__list {
-  width: 20%;
+  width: 30%;
   text-align: center;
+}
+@media screen and (max-width: 768px) {
+  .Footer__list {
+    margin: 5px;
+    width: 100%;
+    text-align: start;
+    font-size: 0.8em;
+  }
 }
 
 .ContactFormLayout {
   height: 500px;
-  width: 550px;
+  width: 50%;
+  max-width: 600px;
+  margin: 15px 0px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  color: #fd2d01;
+  border-radius: 20px;
+  color: #4e5166;
   background-color: #ffd7d7;
 }
+@media screen and (max-width: 992px) {
+  .ContactFormLayout {
+    width: 70%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .ContactFormLayout {
+    width: 90%;
+    max-width: 500px;
+  }
+}
 .ContactFormLayout > h2 {
-  padding: 20px;
+  padding: 5%;
   margin: 0%;
   text-align: center;
+}
+
+.Form {
+  padding: 5%;
+}
+.Form > div {
+  padding: 10px;
+}
+@media screen and (max-width: 768px) {
+  .Form {
+    padding: 2%;
+    height: 75%;
+    max-width: 350px;
+  }
+}
+.Form__submit-button {
+  max-width: 200px;
 }
 
 #description {
   height: 100px;
 }
+@media screen and (max-width: 768px) {
+  #description {
+    height: 150px;
+  }
+}
 #description::placeholder {
   font-style: italic;
-  font-size: small;
+  font-size: 0.8em;
 }
 
-/*
-@import './';
-@import './';
-*/
+.Forum__post-container {
+  height: 350px;
+  width: 60%;
+  max-width: 600px;
+  margin: 10px 0%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px #fd2d01 solid;
+  border-radius: 20px;
+  background-color: #ffd7d7;
+}
+@media screen and (max-width: 768px) {
+  .Forum__post-container {
+    width: 90%;
+    max-width: 470px;
+  }
+}
+
+.Forum__post-h2 {
+  width: fit-content;
+  margin: 10px 0%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+  border-radius: 10px;
+  color: #fd2d01;
+  background-color: #ffffff;
+}
+@media screen and (max-width: 768px) {
+  .Forum__post-h2 {
+    font-size: 1.1em;
+  }
+}
+
+.Forum__post {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+  align-items: center;
+}
+@media screen and (max-width: 992px) {
+  .Forum__post {
+    width: 85%;
+    max-width: 450px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .Forum__post {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+.Forum__post-title {
+  margin: 5px;
+  height: 30px;
+  width: 90%;
+  border: none;
+  border-radius: 10px;
+  box-shadow: inset 1px 1px #4e5166;
+}
+.Forum__post-title:focus {
+  outline: #4e5166;
+}
+.Forum__post-title::placeholder {
+  font-style: italic;
+}
+@media screen and (max-width: 768px) {
+  .Forum__post-title {
+    font-size: 0.9em;
+  }
+}
+.Forum__post-content {
+  margin: 5px;
+  width: 100%;
+  height: 100px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: inset 1px 1px #4e5166;
+}
+.Forum__post-content:focus {
+  outline: #4e5166;
+}
+.Forum__post-content::placeholder {
+  font-style: italic;
+}
+@media screen and (max-width: 768px) {
+  .Forum__post-content {
+    font-size: 0.9em;
+  }
+}
+.Forum__post > label {
+  display: none;
+}
+.Forum__post-img {
+  margin: 5px 0;
+}
+@media screen and (max-width: 768px) {
+  .Forum__post-img {
+    font-size: 0.9em;
+  }
+}
+.Forum__post-submit {
+  width: 100px;
+  margin: 5px 0;
+  padding: 5px;
+  background-color: #4e5166;
+  color: #ffffff;
+  border: 1px solid #4e5166;
+  border-radius: 10px;
+  box-shadow: 0px 1px 1px #fd2d01;
+}
+.Forum__post-submit:hover {
+  background-color: #fd2d01;
+  box-shadow: 0 2px #4e5166;
+  transition: ease-out 0.3s;
+}
+.Forum__post-submit:active {
+  transition: ease-in 0.1s;
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.Display__post {
+  width: 60%;
+  max-width: 600px;
+  margin: 10px 0%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px #4e5166 solid;
+  border-radius: 20px;
+  background-color: #ffd7d7;
+  color: #4e5166;
+}
+@media screen and (max-width: 768px) {
+  .Display__post {
+    width: 90%;
+    max-width: 470px;
+  }
+}
+.Display__user-pic {
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  border: 2px solid #fd2d01;
+  border-radius: 50%;
+  padding: 2px;
+}
+.Display__user-pic > img {
+  width: 100%;
+  object-fit: cover;
+}
+@media screen and (max-width: 768px) {
+  .Display__user-pic {
+    width: 50px;
+    height: 50px;
+  }
+}
+.Display__post-header {
+  width: 90%;
+  margin: 10px 0%;
+  padding-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #ffffff;
+}
+.Display__post-details {
+  display: flex;
+  flex-direction: column;
+}
+.Display__post-title {
+  padding: 0px 5%;
+  color: #4e5166;
+  text-shadow: 1px 1px #4c4f63;
+}
+.Display__post-img-container {
+  width: 90%;
+  overflow: hidden;
+}
+.Display__post-img {
+  height: 400px;
+  width: 100%;
+  object-fit: contain;
+}
+@media screen and (max-width: 768px) {
+  .Display__post-img {
+    height: 300px;
+  }
+}
+.Display__post-content {
+  width: 90%;
+  padding: 20px 0px;
+  border-bottom: 2px solid #ffffff;
+}
+
+.Header {
+  width: 100%;
+  height: 10%;
+}
+.Header__post-user {
+  font-size: 0.9em;
+  font-weight: 700;
+}
+@media screen and (max-width: 768px) {
+  .Header__post-user {
+    font-size: 0.8em;
+  }
+}
+.Header__post-date {
+  font-size: 0.8em;
+  font-style: italic;
+}
+@media screen and (max-width: 768px) {
+  .Header__post-date {
+    font-size: 0.7em;
+  }
+}
+
+.LikeOrNot {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 70%;
+  padding: 10px;
+}
+
+.Like-icon {
+  font-size: 1.3em;
+}
+.Like-icon:hover {
+  cursor: pointer;
+  transform: scale(1.3);
+  transition: ease-in-out 0.2s;
+}
+.Like-icon:target {
+  -webkit-animation: rotate-vert-center 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) both;
+  animation: rotate-vert-center 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) both;
+}
+
+/* ----------------------------------------------
+ * Generated by Animista on 2022-9-9 17:14:51
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info. 
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+/**
+ * ----------------------------------------
+ * animation rotate-vert-center
+ * ----------------------------------------
+ */
+@-webkit-keyframes rotate-vert-center {
+  0% {
+    -webkit-transform: rotateY(0);
+    transform: rotateY(0);
+  }
+  100% {
+    -webkit-transform: rotateY(360deg);
+    transform: rotateY(360deg);
+  }
+}
+@keyframes rotate-vert-center {
+  0% {
+    -webkit-transform: rotateY(0);
+    transform: rotateY(0);
+  }
+  100% {
+    -webkit-transform: rotateY(360deg);
+    transform: rotateY(360deg);
+  }
+}
+.like-btn,
+.dislike-btn {
+  border: none;
+  color: #4e5166;
+  background-color: #ffd7d7;
+}
+
+.UserLiked {
+  color: #fd2d01;
+}
+
+.Dislike {
+  position: relative;
+  top: 3px;
+}
+
+.Interacting__post {
+  width: 70%;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.Modifying__post-icon {
+  padding: 0% 10px;
+}
+.Modifying__post-icon:hover {
+  cursor: pointer;
+  color: #fd2d01;
+}
+
+.Deleting__post-icon {
+  padding: 0% 10px;
+}
+.Deleting__post-icon:hover {
+  cursor: pointer;
+  color: #fd2d01;
+}
+
+#scrollUp {
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  z-index: 99;
+  opacity: 0.4;
+  border: none;
+  outline: none;
+  background-color: #ffd7d7;
+  color: #4e5166;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 1em;
+}
+@media screen and (max-width: 768px) {
+  #scrollUp {
+    background-color: #fd2d01;
+    opacity: 0.6;
+  }
+}
+#scrollUp:hover {
+  opacity: 1;
+}
+#scrollUp:active {
+  color: #ffffff;
+  background-color: #fd2d01;
+}
+
+.Profile__layout {
+  width: 70%;
+  max-width: 700px;
+  margin: 10px 0%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px #fd2d01 solid;
+  border-radius: 20px;
+  background-color: #ffd7d7;
+  color: #4e5166;
+}
+@media screen and (max-width: 768px) {
+  .Profile__layout {
+    width: 90%;
+    max-width: 470px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .Profile__title {
+    font-size: 1.4em;
+  }
+}
+.Profile__pic-container {
+  width: 75%;
+  overflow: hidden;
+}
+@media screen and (max-width: 768px) {
+  .Profile__pic-container {
+    width: 85%;
+  }
+}
+.Profile__pic {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.Profile__user {
+  width: 100%;
+  padding: 25px 0%;
+  display: flex;
+  flex-direction: column;
+}
+@media screen and (max-width: 768px) {
+  .Profile__user {
+    font-size: 0.9em;
+    padding: 10px 0%;
+  }
+}
+.Profile__user-details {
+  margin: 5px 0px;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media screen and (max-width: 768px) {
+  .Profile__user-details {
+    width: 85%;
+  }
+}
+
+.User__details-name {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.User__name, .User__last-name, .User__email {
+  font-weight: 700;
+}
+
+.Modifying-icon:hover {
+  cursor: pointer;
+  color: #fd2d01;
+}
+
+.Unsuscribe {
+  margin: 5px 0px;
+  width: 25%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 0.85em;
+  font-weight: 700;
+  border: 1px solid #fd2d01;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+.Unsuscribe:hover {
+  cursor: pointer;
+  color: #fd2d01;
+}
+.Unsuscribe:hover:active {
+  translate: 0px 1px;
+}
 
 /*# sourceMappingURL=style.css.map */
