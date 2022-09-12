@@ -184,6 +184,24 @@ exports.deletePost = async (req, res) => {
   }
 };
 
+exports.getLike = async (req, res) => {
+  const authUser = req.auth.userId;
+  const postId = parseInt(req.params.id);
+  const getLikeOnTable = await prisma.user_post_like.findMany({
+    where: { user_id: authUser, post_id: postId, likes: true },
+  });
+  res.status(201).json(getLikeOnTable);
+};
+
+exports.getDislike = async (req, res) => {
+  const authUser = req.auth.userId;
+  const postId = parseInt(req.params.id);
+  const getDislikeOnTable = await prisma.user_post_like.findMany({
+    where: { user_id: authUser, post_id: postId, likes: false },
+  });
+  res.status(201).json(getDislikeOnTable);
+};
+
 /**
  * [likePost description]
  * Like ou Dislike d'un post (switch sur la valeur de la requete like : 1; -1 ou 0):
