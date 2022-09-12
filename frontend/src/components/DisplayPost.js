@@ -1,8 +1,10 @@
+import Like from './Post/Like';
 import AxiosClient from '../client/AxiosClient';
 import { useEffect, useState, useContext } from 'react';
 import { getToken } from '../services/LocalStorage';
 import { dateStringifier, sortByDate } from '../utils/DateHandling';
 import Auth from '../contexts/Auth';
+import InteractPost from './Post/InteractPost';
 
 /**
  * [  Affichage de tous les posts par ordre antéchronologique:
@@ -17,9 +19,15 @@ function DisplayPost() {
   const { user } = useContext(Auth);
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
+
   const [showTopBtn, setShowTopBtn] = useState(false);
 
-  const fetchPosts = async (token) => {
+  const isAdmin = () => {
+    if (user.role === 'admin') {
+      return true;
+    }
+  };
+  async function fetchPosts(token) {
     const userToken = getToken('sessionToken', token);
     try {
       const response = await AxiosClient({
@@ -30,8 +38,8 @@ function DisplayPost() {
     } catch (error) {
       console.log(error);
     }
-  };
-  const fetchUsers = async () => {
+  }
+  async function fetchUsers() {
     try {
       const response = await AxiosClient({
         url: 'api/auth/users/',
@@ -40,14 +48,7 @@ function DisplayPost() {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const isAdmin = () => {
-    if (user.role === 'admin') {
-      return true;
-    }
-  };
-
+  }
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -75,13 +76,19 @@ function DisplayPost() {
               return true;
             }
           };
-
+          const userIdentification = () => {
+            if (postAuthor.name === null && postAuthor.lastName === null) {
+              return postAuthor.email;
+            } else {
+              return [postAuthor.name, ' ', postAuthor.lastName];
+            }
+          };
           return (
             <article className="Display__post" key={post.id}>
               <header className="Display__post-header">
                 <div className="Display__post-details">
                   <div className="Header__post-user">
-                    {postAuthor.name} {postAuthor.lastName} a posté :
+                    {userIdentification()} a posté :
                   </div>
                   <div className="Header__post-date">
                     {dateStringifier(post.createdAt)}
@@ -93,7 +100,11 @@ function DisplayPost() {
               </header>
               <h2 className="Display__post-title">{post.title} </h2>
               {post.imageUrl && (
-                <a href={post.imageUrl} className="Display__post-img-container">
+                <a
+                  href={post.imageUrl}
+                  target="blank"
+                  className="Display__post-img-container"
+                >
                   <img
                     alt="post_image"
                     src={post.imageUrl}
@@ -103,22 +114,10 @@ function DisplayPost() {
               )}
               <div className="Display__post-content">{post.content}</div>
 
-              <div className="LikeOrNot">
-                <div className="Like">
-                  <i className="fa-solid fa-thumbs-up Like-icon"></i>
-                  <span className="Like-count"> {post.dislikes}</span>
-                </div>
-                <div className="Like">
-                  <i className="fa-solid fa-thumbs-down Like-icon Dislike"></i>
-                  <span className="Like-count"> {post.dislikes}</span>
-                </div>
-              </div>
+              <Like likes={post.likes} dislikes={post.dislikes} id={post.id} />
 
               {(isAdmin() === true || authUser() === true) && (
-                <div className="Interacting__post">
-                  <i className="fa-solid fa-pencil Modifying__post-icon"></i>
-                  <i className="fa-solid fa-trash Deleting__post-icon"></i>
-                </div>
+                <InteractPost id={post.id} />
               )}
             </article>
           );
