@@ -8,6 +8,8 @@ export default React.createContext({
     email: '',
     name: '',
     lastName: '',
+    role: '',
+    imageUrl: '',
   },
   setUser: (value) => {},
 });

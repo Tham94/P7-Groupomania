@@ -14,6 +14,7 @@ model user {
   email          String           @unique(map: "email") @db.VarChar(255)
   password       String           @db.VarChar(255)
   role           Role             @default(member)
+  imageUrl       String?          @db.VarChar(255)
   posts          post[]
   user_post_like user_post_like[]
 }
