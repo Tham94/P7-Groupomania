@@ -12,6 +12,16 @@ exports.getUsers = async (req, res) => {
   }
 };
 
+exports.getOneUser = async (req, res) => {
+  const { userId } = req.auth;
+  try {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
 exports.signup = async (req, res) => {
   const { email, password } = req.body;
   const signedUser = await prisma.user.findUnique({ where: { email: email } });
@@ -39,7 +49,6 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   const user = await prisma.user.findUnique({ where: { email: email } });
-
   try {
     if (!user) {
       return res.status(404).json({ message: ` ${email} n'existe pas !` });

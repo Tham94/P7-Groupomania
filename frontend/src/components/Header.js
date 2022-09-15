@@ -6,14 +6,21 @@ import { logOut } from '../services/AuthApi';
 import { toast } from 'react-toastify';
 
 function Header() {
-  const { isAuthenticated, setIsAuthenticated, setLikes, setDislikes } =
-    useContext(Auth);
-  const { user } = useContext(Auth);
+  const {
+    isAuthenticated,
+    setIsAuthenticated,
+    user,
+    setUser,
+    setLikes,
+    setDislikes,
+  } = useContext(Auth);
+
   const handleLogOut = () => {
     const confirmation = window.confirm('Voulez-vous vous déconnecté?');
     if (confirmation) {
       logOut();
       setIsAuthenticated(false);
+      setUser({});
       setLikes([]);
       setDislikes([]);
       function userNotNull() {

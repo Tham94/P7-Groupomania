@@ -1,7 +1,7 @@
 import Like from './Post/Like';
 import AxiosClient from '../client/AxiosClient';
 import { useEffect, useState, useContext } from 'react';
-import { addLikeTable, getToken } from '../services/LocalStorage';
+import { getToken } from '../services/LocalStorage';
 import { dateStringifier, sortByDate } from '../utils/DateHandling';
 import Auth from '../contexts/Auth';
 import InteractPost from './Post/InteractPost';
@@ -15,30 +15,18 @@ import InteractPost from './Post/InteractPost';
  * @return  {JSX.Element}  [Composant affichant les posts]
  */
 function DisplayPost() {
-  const { user, likes, dislikes } = useContext(Auth);
+  const { user } = useContext(Auth);
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
 
   const [showTopBtn, setShowTopBtn] = useState(false);
-
-  /**
-   * [  Au chargement de la page,
-   *    transférer les tables likes & dislikes dans le localStorage
-   *    Car il n'a pu être réaliser au moment du login:
-   *    elles se sauvegardent bien mais passe en undefined lorque l'on est redirigé
-   *    vers la page forum  ]
-   *
-   */
-  useEffect(() => {
-    addLikeTable('likes', likes);
-    addLikeTable('dislikes', dislikes);
-  });
 
   const isAdmin = () => {
     if (user.role === 'admin') {
       return true;
     }
   };
+
   async function fetchPosts() {
     const userToken = getToken('sessionToken');
     try {
@@ -86,7 +74,7 @@ function DisplayPost() {
         posts.sort(sortByDate).map((post) => {
           const postAuthor = users.find((user) => user.id === post.authorId);
           const authUser = () => {
-            if (user.userId === postAuthor.id) {
+            if (user.id === postAuthor.id) {
               return true;
             }
           };

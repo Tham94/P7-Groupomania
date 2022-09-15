@@ -10,20 +10,66 @@ import Contact from './pages/Contact';
 import Profile from './pages/Profile';
 
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
-import { hasAuthenticated, userFromToken } from './services/AuthApi';
+import { useEffect, useState } from 'react';
+import { hasAuthenticated } from './services/AuthApi';
+
 import Auth from './contexts/Auth';
 import AuthenticatedRoute from './components/AuthenticatedRoute';
-import { likeTable, dislikeTable } from './services/LocalStorage';
+import { getToken } from './services/LocalStorage';
+import AxiosClient from './client/AxiosClient';
 
 function App() {
   /* State pour authentifier la connexion (true/false) */
   const [isAuthenticated, setIsAuthenticated] = useState(hasAuthenticated());
   /* State pour maintenir la session en cas de refresh */
-  const [user, setUser] = useState(userFromToken());
+  const [user, setUser] = useState({});
   /* State pour maintenir les tables avec le localStorage*/
-  const [likes, setLikes] = useState(likeTable());
-  const [dislikes, setDislikes] = useState(dislikeTable());
+  const [likes, setLikes] = useState([]);
+  const [dislikes, setDislikes] = useState([]);
+
+  const token = getToken('sessionToken');
+
+  useEffect(() => {
+    const getAuthUser = async () => {
+      if (token) {
+        const response = await AxiosClient({
+          url: 'api/auth/users/user',
+          headers: { Authorization: 'Bearer ' + token },
+        });
+        const user = response.data;
+        setUser(user);
+      }
+    };
+    getAuthUser().catch(console.error);
+  }, [token]);
+
+  useEffect(() => {
+    const getLikes = async () => {
+      if (token) {
+        const response = await AxiosClient({
+          url: `api/posts/likes`,
+          headers: { Authorization: 'Bearer ' + token },
+        });
+        const likeTable = response.data;
+        setLikes(likeTable);
+      }
+    };
+    getLikes().catch(console.error);
+  }, [token]);
+
+  useEffect(() => {
+    const getDislikes = async () => {
+      if (token) {
+        const response = await AxiosClient({
+          url: `api/posts/dislikes`,
+          headers: { Authorization: 'Bearer ' + token },
+        });
+        const dislikeTable = response.data;
+        setDislikes(dislikeTable);
+      }
+    };
+    getDislikes().catch(console.error);
+  }, [token]);
 
   return (
     <Auth.Provider

@@ -1,31 +1,21 @@
 import AxiosLike from '../../client/AxiosLike';
-import {
-  addLikeTable,
-  getToken,
-  likeTable,
-  dislikeTable,
-} from '../../services/LocalStorage';
+import { getToken } from '../../services/LocalStorage';
 import { useState, useContext } from 'react';
 import Auth from '../../contexts/Auth';
 
 function Like(props) {
   const userToken = getToken('sessionToken');
-  /*Récupération des tables dans le localStorage */
-  const newLikeTable = likeTable();
-  const newDislikeTable = dislikeTable();
 
-  const { user, setLikes, setDislikes } = useContext(Auth);
+  const { user, likes, dislikes, setLikes, setDislikes } = useContext(Auth);
+  const newLikesTable = likes.slice();
+  const newDislikeTable = dislikes.slice();
+
   const [likesCount, setLikesCount] = useState(props.likes);
   const [dislikesCount, setDislikesCount] = useState(props.dislikes);
 
-  /**
-   * [Chercher dans la table likes quand le user connecté et le post correspond]
-   *
-   * @return  {boolean}  [true si le like est trouvé dans la table sinon false]
-   */
   const isLiked = () => {
-    const rowFound = newLikeTable.find(
-      (row) => row.user_id === user.userId && row.post_id === props.id
+    const rowFound = likes.find(
+      (row) => row.user_id === user.id && row.post_id === props.id
     );
     if (rowFound !== undefined) {
       return true;
@@ -39,8 +29,8 @@ function Like(props) {
    * @return  {boolean}  [true si le dislike est trouvé dans la table sinon false]
    */
   const isDisliked = () => {
-    const rowFound = newDislikeTable.find(
-      (row) => row.user_id === user.userId && row.post_id === props.id
+    const rowFound = dislikes.find(
+      (row) => row.user_id === user.id && row.post_id === props.id
     );
     if (rowFound !== undefined) {
       return true;
@@ -66,12 +56,11 @@ function Like(props) {
    * - vérifier si le post n'est pas liké :
    *    - Envoyer la requête "1" au backend
    *    - Incrémenter par 1 le compteur de likes dans le state
-   *    - Ajouter cette nouvelle ligne dans le LS
-   *    - et dans le contexte
+   *    - Ajouter cette nouvelle ligne dans le contexte
+   *
    * - si déja liké :
    *    - envoyer la requête "0" au backend
    *    - Décrémenter par 1 le compteur de likes dans le state
-   *    - Mettre à jour le LS
    *    - Mettre à jour le contexte
    */
   const handleLike = async () => {
@@ -83,21 +72,19 @@ function Like(props) {
       });
       setLikesCount((previousCount) => previousCount + 1);
       const newRow = {
-        user_id: user.userId,
+        user_id: user.id,
         post_id: props.id,
         likes: true,
       };
-      newLikeTable.push(newRow);
-      addLikeTable('likes', newLikeTable);
-      setLikes(newLikeTable);
+
+      newLikesTable.push(newRow);
+      setLikes(newLikesTable);
     } else {
       removeLike();
       setLikesCount((previousCount) => previousCount - 1);
-      const rowsToKeep = newLikeTable.filter(
-        (toKeep) =>
-          toKeep.user_id !== user.userId || toKeep.post_id !== props.id
+      const rowsToKeep = likes.filter(
+        (toKeep) => toKeep.user_id !== user.id || toKeep.post_id !== props.id
       );
-      addLikeTable('likes', rowsToKeep);
       setLikes(rowsToKeep);
     }
   };
@@ -107,12 +94,11 @@ function Like(props) {
    * - vérifier si le post n'est pas disliké :
    *    - Envoyer la requête "-1" au backend
    *    - Incrémenter par 1 le compteur de dislikes dans le state
-   *    - Ajouter cette nouvelle ligne dans le LS
-   *    - et dans le contexte
+   *    - Ajouter cette nouvelle ligne dans le contexte
+   *
    * - si déja disliké :
    *    - envoyer la requête "0" au backend
    *    - Décrémenter par 1 le compteur de dislikes dans le state
-   *    - Mettre à jour le LS
    *    - Mettre à jour le contexte
    */
   const handleDislike = async () => {
@@ -124,21 +110,18 @@ function Like(props) {
       });
       setDislikesCount((previousCount) => previousCount + 1);
       const newRow = {
-        user_id: user.userId,
+        user_id: user.id,
         post_id: props.id,
         likes: false,
       };
       newDislikeTable.push(newRow);
-      addLikeTable('dislikes', newDislikeTable);
       setDislikes(newDislikeTable);
     } else {
       removeLike();
       setDislikesCount((previousCount) => previousCount - 1);
-      const rowsToKeep = newDislikeTable.filter(
-        (toKeep) =>
-          toKeep.user_id !== user.userId || toKeep.post_id !== props.id
+      const rowsToKeep = dislikes.filter(
+        (toKeep) => toKeep.user_id !== user.id || toKeep.post_id !== props.id
       );
-      addLikeTable('dislikes', rowsToKeep);
       setDislikes(rowsToKeep);
     }
   };

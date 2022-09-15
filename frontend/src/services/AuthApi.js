@@ -58,22 +58,6 @@ export async function login({ email, password }) {
 }
 
 /**
- * [Fonction pour récupérer les détails du user dans le token
- * afin de le set dans le state de App.js pour ne pas perdre la session ]
- *
- * @return  {[Object]}  [ Objet contenant les détails du user | { }]
- */
-export function userFromToken() {
-  const token = getToken('sessionToken');
-  if (token) {
-    const { userId, email, name, lastName, role, imageUrl } = jwtDecode(token);
-    return { userId, email, name, lastName, role, imageUrl };
-  } else {
-    return {};
-  }
-}
-
-/**
  * [ Déconnexion :
  *   en supprimant le token du localStorage ]
  *

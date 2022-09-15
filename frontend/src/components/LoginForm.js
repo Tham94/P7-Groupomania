@@ -4,8 +4,6 @@ import Auth from '../contexts/Auth';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/AuthApi';
 import { toast } from 'react-toastify';
-import AxiosClient from '../client/AxiosClient';
-import { getToken } from '../services/LocalStorage';
 
 /**
  * [ Récupération du contexte d'authentification;
@@ -17,13 +15,7 @@ import { getToken } from '../services/LocalStorage';
  * @return  {[JSX.Element]}         [Formulaire Formik avec gestion de la validation des champs]
  */
 function LoginForm() {
-  const {
-    isAuthenticated,
-    setIsAuthenticated,
-    setUser,
-    setLikes,
-    setDislikes,
-  } = useContext(Auth);
+  const { isAuthenticated, setIsAuthenticated, setUser } = useContext(Auth);
 
   const [apiError, setApiError] = useState('');
 
@@ -34,33 +26,6 @@ function LoginForm() {
     }
   }, [navigate, isAuthenticated]);
 
-  async function getLikes() {
-    const userToken = getToken('sessionToken');
-    try {
-      const response = await AxiosClient({
-        url: `api/posts/likes`,
-        headers: { Authorization: 'Bearer ' + userToken },
-      });
-      const getLikeTable = response.data;
-      setLikes(getLikeTable);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function getDislikes() {
-    const userToken = getToken('sessionToken');
-    try {
-      const response = await AxiosClient({
-        url: `api/posts/dislikes`,
-        headers: { Authorization: 'Bearer ' + userToken },
-      });
-      const getDislikeTable = response.data;
-      setDislikes(getDislikeTable);
-    } catch (error) {
-      console.log(error);
-    }
-  }
   /**
    * [ Soumission du formulaire: redirection vers le forum si connecté ou affichage d'un message d'erreur ]
    *
@@ -71,8 +36,6 @@ function LoginForm() {
    */
   const handleLogin = async ({ email, password }) => {
     const loginResponse = await login({ email, password });
-    getLikes();
-    getDislikes();
     const userDetails = loginResponse.user;
     if (loginResponse.success === true) {
       setIsAuthenticated(loginResponse.success);
