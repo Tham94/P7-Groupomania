@@ -12,4 +12,8 @@ export default React.createContext({
     imageUrl: '',
   },
   setUser: (value) => {},
+  likes: [],
+  dislikes: [],
+  setLikes: (value) => [],
+  setDislikes: (value) => [],
 });

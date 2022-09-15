@@ -1,5 +1,5 @@
 import jwtDecode from 'jwt-decode';
-import { getToken, addToken, removeToken } from './LocalStorage';
+import { getToken, addToken, removeToken, clearData } from './LocalStorage';
 import AxiosClient from '../client/AxiosClient';
 
 /**
@@ -79,5 +79,5 @@ export function userFromToken() {
  *
  */
 export function logOut() {
-  removeToken('sessionToken');
+  clearData();
 }

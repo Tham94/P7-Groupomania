@@ -8,23 +8,35 @@ import SignUp from './pages/SignUp';
 import Forum from './pages/Forum';
 import Contact from './pages/Contact';
 import Profile from './pages/Profile';
-import DisplayPost from './components/DisplayPost';
 
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import { hasAuthenticated, userFromToken } from './services/AuthApi';
 import Auth from './contexts/Auth';
 import AuthenticatedRoute from './components/AuthenticatedRoute';
+import { likeTable, dislikeTable } from './services/LocalStorage';
 
 function App() {
-  /* State pour authentifié la connexion (true/false) */
+  /* State pour authentifier la connexion (true/false) */
   const [isAuthenticated, setIsAuthenticated] = useState(hasAuthenticated());
   /* State pour maintenir la session en cas de refresh */
   const [user, setUser] = useState(userFromToken());
+  /* State pour maintenir les tables avec le localStorage*/
+  const [likes, setLikes] = useState(likeTable());
+  const [dislikes, setDislikes] = useState(dislikeTable());
 
   return (
     <Auth.Provider
-      value={{ isAuthenticated, setIsAuthenticated, user, setUser }}
+      value={{
+        isAuthenticated,
+        setIsAuthenticated,
+        user,
+        setUser,
+        likes,
+        setLikes,
+        dislikes,
+        setDislikes,
+      }}
     >
       <div className="App">
         <Layout>
@@ -36,7 +48,6 @@ function App() {
             <Route element={<AuthenticatedRoute />}>
               <Route exact path="/profile/:id" element={<Profile />} />
               <Route exact path="/forum" element={<Forum />} />
-              <Route exact path="/forum/:id" element={<DisplayPost />} />
             </Route>
           </Routes>
         </Layout>

@@ -1,17 +1,58 @@
 import AxiosLike from '../../client/AxiosLike';
-import AxiosClient from '../../client/AxiosClient';
-import { getToken } from '../../services/LocalStorage';
-import { useState, useContext, useEffect } from 'react';
+import {
+  addLikeTable,
+  getToken,
+  likeTable,
+  dislikeTable,
+} from '../../services/LocalStorage';
+import { useState, useContext } from 'react';
 import Auth from '../../contexts/Auth';
 
 function Like(props) {
-  const { user } = useContext(Auth);
   const userToken = getToken('sessionToken');
-  const [likes, setLikes] = useState(props.likes);
-  const [dislikes, setDislikes] = useState(props.dislikes);
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
+  /*Récupération des tables dans le localStorage */
+  const newLikeTable = likeTable();
+  const newDislikeTable = dislikeTable();
 
+  const { user, setLikes, setDislikes } = useContext(Auth);
+  const [likesCount, setLikesCount] = useState(props.likes);
+  const [dislikesCount, setDislikesCount] = useState(props.dislikes);
+
+  /**
+   * [Chercher dans la table likes quand le user connecté et le post correspond]
+   *
+   * @return  {boolean}  [true si le like est trouvé dans la table sinon false]
+   */
+  const isLiked = () => {
+    const rowFound = newLikeTable.find(
+      (row) => row.user_id === user.userId && row.post_id === props.id
+    );
+    if (rowFound !== undefined) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  /**
+   * [Chercher dans la table dislikes quand le user connecté et le post correspond]
+   *
+   * @return  {boolean}  [true si le dislike est trouvé dans la table sinon false]
+   */
+  const isDisliked = () => {
+    const rowFound = newDislikeTable.find(
+      (row) => row.user_id === user.userId && row.post_id === props.id
+    );
+    if (rowFound !== undefined) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  /**
+   * [Supprimer le like ou dislike en envoyant "0" au backend]
+   *
+   */
   const removeLike = async () => {
     await AxiosLike({
       url: `${props.id}/like`,
@@ -20,113 +61,143 @@ function Like(props) {
     });
   };
 
-  const checkLike = async () => {
-    const response = await AxiosClient({
-      url: `api/posts/${props.id}/userlike`,
-      headers: { Authorization: 'Bearer ' + userToken },
-    });
-    if (response.data[0] !== undefined) {
-      const isUserLiked = response.data[0].user_id;
-      if (isUserLiked === user.userId) {
-        setLiked(true);
-      }
-    }
-  };
-  const checkDislike = async () => {
-    const response = await AxiosClient({
-      url: `api/posts/${props.id}/userdislike`,
-      headers: { Authorization: 'Bearer ' + userToken },
-    });
-    if (response.data[0] !== undefined) {
-      const userDisliked = response.data[0].user_id;
-      if (userDisliked === user) {
-        setDisliked(true);
-      }
-    }
-  };
-
+  /**
+   * Liker un post :
+   * - vérifier si le post n'est pas liké :
+   *    - Envoyer la requête "1" au backend
+   *    - Incrémenter par 1 le compteur de likes dans le state
+   *    - Ajouter cette nouvelle ligne dans le LS
+   *    - et dans le contexte
+   * - si déja liké :
+   *    - envoyer la requête "0" au backend
+   *    - Décrémenter par 1 le compteur de likes dans le state
+   *    - Mettre à jour le LS
+   *    - Mettre à jour le contexte
+   */
   const handleLike = async () => {
-    try {
-      const getLike = await AxiosClient({
-        url: `api/posts/${props.id}/userlike`,
+    if (!isLiked()) {
+      await AxiosLike({
+        url: `${props.id}/like`,
         headers: { Authorization: 'Bearer ' + userToken },
+        data: { like: 1 },
       });
-      if (getLike.data[0] === undefined) {
-        await AxiosLike({
-          url: `${props.id}/like`,
-          headers: { Authorization: 'Bearer ' + userToken },
-          data: { like: 1 },
-        });
-        setLikes(likes + 1);
-      } else {
-        removeLike();
-        setLikes(likes - 1);
-      }
-    } catch (error) {
-      console.log(error);
+      setLikesCount((previousCount) => previousCount + 1);
+      const newRow = {
+        user_id: user.userId,
+        post_id: props.id,
+        likes: true,
+      };
+      newLikeTable.push(newRow);
+      addLikeTable('likes', newLikeTable);
+      setLikes(newLikeTable);
+    } else {
+      removeLike();
+      setLikesCount((previousCount) => previousCount - 1);
+      const rowsToKeep = newLikeTable.filter(
+        (toKeep) =>
+          toKeep.user_id !== user.userId || toKeep.post_id !== props.id
+      );
+      addLikeTable('likes', rowsToKeep);
+      setLikes(rowsToKeep);
     }
   };
 
+  /**
+   * Disliker un post :
+   * - vérifier si le post n'est pas disliké :
+   *    - Envoyer la requête "-1" au backend
+   *    - Incrémenter par 1 le compteur de dislikes dans le state
+   *    - Ajouter cette nouvelle ligne dans le LS
+   *    - et dans le contexte
+   * - si déja disliké :
+   *    - envoyer la requête "0" au backend
+   *    - Décrémenter par 1 le compteur de dislikes dans le state
+   *    - Mettre à jour le LS
+   *    - Mettre à jour le contexte
+   */
   const handleDislike = async () => {
-    try {
-      const getDislike = await AxiosClient({
-        url: `api/posts/${props.id}/userdislike`,
+    if (!isDisliked()) {
+      await AxiosLike({
+        url: `${props.id}/like`,
         headers: { Authorization: 'Bearer ' + userToken },
+        data: { like: -1 },
       });
-      if (getDislike.data[0] === undefined) {
-        await AxiosLike({
-          url: `${props.id}/like`,
-          headers: { Authorization: 'Bearer ' + userToken },
-          data: { like: -1 },
-        });
-        setDislikes(dislikes + 1);
-      } else {
-        removeLike();
-        setDislikes(dislikes - 1);
-      }
-    } catch (error) {
-      console.log(error);
+      setDislikesCount((previousCount) => previousCount + 1);
+      const newRow = {
+        user_id: user.userId,
+        post_id: props.id,
+        likes: false,
+      };
+      newDislikeTable.push(newRow);
+      addLikeTable('dislikes', newDislikeTable);
+      setDislikes(newDislikeTable);
+    } else {
+      removeLike();
+      setDislikesCount((previousCount) => previousCount - 1);
+      const rowsToKeep = newDislikeTable.filter(
+        (toKeep) =>
+          toKeep.user_id !== user.userId || toKeep.post_id !== props.id
+      );
+      addLikeTable('dislikes', rowsToKeep);
+      setDislikes(rowsToKeep);
     }
   };
-  useEffect(() => {
-    checkLike();
-  });
-  useEffect(() => {
-    checkDislike();
-  });
-  return liked && !disliked ? (
+
+  return (
     <>
-      <div className="LikeOrNot">
-        <div className="Like">
-          <button onClick={handleLike} className=" like-btn ">
-            <i className="fa-solid fa-thumbs-up Like-icon"></i>
-          </button>
-          <span className="Like-count"> {likes}</span>
+      {isLiked() && (
+        <div className="LikeOrNot">
+          <div className="Like">
+            <button onClick={handleLike} className="UserLiked">
+              <i className="fa-solid fa-thumbs-up Like-icon"></i>
+            </button>
+            <span className="Like-count"> {likesCount}</span>
+          </div>
+
+          <div className="Like">
+            <button className="dislike-btn Disable-btn">
+              <i className="fa-solid fa-thumbs-down Like-icon--disable Dislike"></i>
+            </button>
+            <span className="Like-count"> {dislikesCount}</span>
+          </div>
         </div>
-        <div className="Like">
-          <button onClick={handleDislike} className=" dislike-btn ">
-            <i className="fa-solid fa-thumbs-down Like-icon Dislike"></i>
-          </button>
-          <span className="Like-count"> {dislikes}</span>
+      )}
+
+      {isDisliked() && (
+        <div className="LikeOrNot">
+          <div className="Like">
+            <button className="like-btn Disable-btn">
+              <i className="fa-solid fa-thumbs-up Like-icon--disable"></i>
+            </button>
+            <span className="Like-count"> {likesCount}</span>
+          </div>
+
+          <div className="Like">
+            <button onClick={handleDislike} className="UserLiked">
+              <i className="fa-solid fa-thumbs-down Like-icon Dislike"></i>
+            </button>
+            <span className="Like-count"> {dislikesCount}</span>
+          </div>
         </div>
-      </div>
-    </>
-  ) : (
-    <>
-      <div className="LikeOrNot">
-        <div className="Like">
-          <button onClick={handleLike} className=" like-btn ">
-            <i className="fa-solid fa-thumbs-up Like-icon"></i>
-          </button>
-          <span className="Like-count"> {likes}</span>
+      )}
+
+      {!isLiked() && !isDisliked() && (
+        <div className="LikeOrNot">
+          <div className="Like">
+            <button onClick={handleLike} className="like-btn">
+              <i className="fa-solid fa-thumbs-up Like-icon"></i>
+            </button>
+            <span className="Like-count"> {likesCount}</span>
+          </div>
+
+          <div className="Like">
+            <button onClick={handleDislike} className="dislike-btn ">
+              <i className="fa-solid fa-thumbs-down Like-icon Dislike"></i>
+            </button>
+            <span className="Like-count"> {dislikesCount}</span>
+          </div>
         </div>
-        <div className="Like">
-          <button onClick={handleDislike} className=" dislike-btn ">
-            <i className="fa-solid fa-thumbs-down Like-icon Dislike"></i>
-          </button>
-          <span className="Like-count"> {dislikes}</span>
-        </div>
-      </div>
+      )}
     </>
   );
 }

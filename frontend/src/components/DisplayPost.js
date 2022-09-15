@@ -1,34 +1,46 @@
 import Like from './Post/Like';
 import AxiosClient from '../client/AxiosClient';
 import { useEffect, useState, useContext } from 'react';
-import { getToken } from '../services/LocalStorage';
+import { addLikeTable, getToken } from '../services/LocalStorage';
 import { dateStringifier, sortByDate } from '../utils/DateHandling';
 import Auth from '../contexts/Auth';
 import InteractPost from './Post/InteractPost';
 
 /**
- * [  Affichage de tous les posts par ordre antéchronologique:
+ * [  Affichage de tous les posts par ordre antéchronologique
  *    Get tous les posts / users (pour récupérer leurs nom, prénom)
  *    Récupération du context user (user connecté ou admin) pour afficher les icones de modif/suppression
- *
+ *    Sauvegarde des tables dans le localStorage
  *    ]
- *
  * @return  {JSX.Element}  [Composant affichant les posts]
  */
 function DisplayPost() {
-  const { user } = useContext(Auth);
+  const { user, likes, dislikes } = useContext(Auth);
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
 
   const [showTopBtn, setShowTopBtn] = useState(false);
+
+  /**
+   * [  Au chargement de la page,
+   *    transférer les tables likes & dislikes dans le localStorage
+   *    Car il n'a pu être réaliser au moment du login:
+   *    elles se sauvegardent bien mais passe en undefined lorque l'on est redirigé
+   *    vers la page forum  ]
+   *
+   */
+  useEffect(() => {
+    addLikeTable('likes', likes);
+    addLikeTable('dislikes', dislikes);
+  });
 
   const isAdmin = () => {
     if (user.role === 'admin') {
       return true;
     }
   };
-  async function fetchPosts(token) {
-    const userToken = getToken('sessionToken', token);
+  async function fetchPosts() {
+    const userToken = getToken('sessionToken');
     try {
       const response = await AxiosClient({
         url: 'api/posts/',
@@ -39,10 +51,12 @@ function DisplayPost() {
       console.log(error);
     }
   }
-  async function fetchUsers() {
+  async function fetchUsers(token) {
+    const userToken = getToken('sessionToken', token);
     try {
       const response = await AxiosClient({
         url: 'api/auth/users/',
+        headers: { Authorization: 'Bearer ' + userToken },
       });
       setUsers(response.data);
     } catch (error) {
