@@ -184,22 +184,28 @@ exports.deletePost = async (req, res) => {
   }
 };
 
-exports.getLike = async (req, res) => {
+exports.getLikes = async (req, res) => {
   const authUser = req.auth.userId;
-  const postId = parseInt(req.params.id);
-  const getLikeOnTable = await prisma.user_post_like.findMany({
-    where: { user_id: authUser, post_id: postId, likes: true },
-  });
-  res.status(201).json(getLikeOnTable);
+  try {
+    const result = await prisma.user_post_like.findMany({
+      where: { user_id: authUser, likes: true },
+    });
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(404).json(error);
+  }
 };
 
-exports.getDislike = async (req, res) => {
+exports.getDislikes = async (req, res) => {
   const authUser = req.auth.userId;
-  const postId = parseInt(req.params.id);
-  const getDislikeOnTable = await prisma.user_post_like.findMany({
-    where: { user_id: authUser, post_id: postId, likes: false },
-  });
-  res.status(201).json(getDislikeOnTable);
+  try {
+    const result = await prisma.user_post_like.findMany({
+      where: { user_id: authUser, likes: false },
+    });
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(404).json(error);
+  }
 };
 
 /**
