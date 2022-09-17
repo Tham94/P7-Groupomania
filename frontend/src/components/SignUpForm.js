@@ -10,7 +10,6 @@ import AxiosClient from '../client/AxiosClient';
  * @return  {[JSX.Element]}      [ Formulaire Formik avec gestion de la validation des champs ]
  */
 function SignUpForm() {
-  const [formSubmit, setFormSubmit] = useState(false);
   const [apiError, setApiError] = useState('');
   /**
    * [ Requête post pour s'enregistrer dans la base de données
@@ -29,7 +28,6 @@ function SignUpForm() {
         withCredentials: true,
         data: { email, password },
       });
-      setFormSubmit(true);
       toast.success(" Tu t'es bien enregistré 👍, connectes-toi !", {
         position: 'bottom-center',
         autoClose: 2000,
@@ -37,7 +35,9 @@ function SignUpForm() {
         pauseOnHover: false,
         draggable: true,
       });
-      window.location = '/login';
+      setTimeout(() => {
+        window.location = '/login';
+      }, 2500);
     } catch (res) {
       const errorMsg = res.response.data.message;
       setApiError(errorMsg);

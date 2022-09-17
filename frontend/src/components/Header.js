@@ -27,7 +27,8 @@ function Header() {
         if (user.name !== null) {
           return user.name;
         } else {
-          return '';
+          const userEmail = user.email.split('@');
+          return userEmail[0];
         }
       }
       toast.info(`A bientôt ${userNotNull()} 👋!`, {
@@ -93,7 +94,7 @@ function Header() {
               </li>
               <li>
                 <NavLink
-                  to={`/profile/${user.userId}`}
+                  to={`/profile/${user.id}`}
                   className={({ isActive }) =>
                     isActive ? 'activeLink' : undefined
                   }
@@ -117,18 +118,6 @@ function Header() {
               </li>
             </>
           )}
-
-          <li>
-            <NavLink
-              to="/contact"
-              className={({ isActive }) =>
-                isActive ? 'activeLink' : undefined
-              }
-            >
-              <p className="link-text">Contact</p>
-              <i className="fa-solid fa-envelope ft-icon"></i>
-            </NavLink>
-          </li>
         </ul>
       </nav>
     </header>
