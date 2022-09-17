@@ -6,7 +6,6 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import SignUp from './pages/SignUp';
 import Forum from './pages/Forum';
-import Contact from './pages/Contact';
 import Profile from './pages/Profile';
 
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -23,14 +22,44 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(hasAuthenticated());
   /* State pour maintenir la session en cas de refresh */
   const [user, setUser] = useState({});
-  /* State pour maintenir les tables avec le localStorage*/
+  /* State pour maintenir afficher les données de l'API */
+  const [allUsers, setAllUsers] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
+  /* State pour maintenir les tables avec le localStorage */
   const [likes, setLikes] = useState([]);
   const [dislikes, setDislikes] = useState([]);
 
-  const token = getToken('sessionToken');
+  useEffect(() => {
+    const token = getToken('sessionToken');
+    const fetchUsers = async () => {
+      if (token) {
+        const response = await AxiosClient({
+          url: 'api/auth/users/',
+          headers: { Authorization: 'Bearer ' + token },
+        });
+        setAllUsers(response.data);
+      }
+    };
+    fetchUsers().catch(console.error);
+  }, []);
 
   useEffect(() => {
-    const getAuthUser = async () => {
+    const token = getToken('sessionToken');
+    const fetchPosts = async () => {
+      if (token) {
+        const response = await AxiosClient({
+          url: 'api/posts/',
+          headers: { Authorization: 'Bearer ' + token },
+        });
+        setAllPosts(response.data);
+      }
+    };
+    fetchPosts().catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    const token = getToken('sessionToken');
+    const fetchAuthUser = async () => {
       if (token) {
         const response = await AxiosClient({
           url: 'api/auth/users/user',
@@ -40,11 +69,12 @@ function App() {
         setUser(user);
       }
     };
-    getAuthUser().catch(console.error);
-  }, [token]);
+    fetchAuthUser().catch(console.error);
+  }, []);
 
   useEffect(() => {
-    const getLikes = async () => {
+    const token = getToken('sessionToken');
+    const fetchLikes = async () => {
       if (token) {
         const response = await AxiosClient({
           url: `api/posts/likes`,
@@ -54,11 +84,12 @@ function App() {
         setLikes(likeTable);
       }
     };
-    getLikes().catch(console.error);
-  }, [token]);
+    fetchLikes().catch(console.error);
+  }, []);
 
   useEffect(() => {
-    const getDislikes = async () => {
+    const token = getToken('sessionToken');
+    const fetchDislikes = async () => {
       if (token) {
         const response = await AxiosClient({
           url: `api/posts/dislikes`,
@@ -68,8 +99,8 @@ function App() {
         setDislikes(dislikeTable);
       }
     };
-    getDislikes().catch(console.error);
-  }, [token]);
+    fetchDislikes().catch(console.error);
+  }, []);
 
   return (
     <Auth.Provider
@@ -78,6 +109,10 @@ function App() {
         setIsAuthenticated,
         user,
         setUser,
+        allUsers,
+        setAllUsers,
+        allPosts,
+        setAllPosts,
         likes,
         setLikes,
         dislikes,
@@ -90,7 +125,6 @@ function App() {
             <Route path="*" element={<Navigate to={'/login'} />} />
             <Route exact path="/login" element={<Home />} />
             <Route exact path="/signup" element={<SignUp />} />
-            <Route exact path="/contact" element={<Contact />} />
             <Route element={<AuthenticatedRoute />}>
               <Route exact path="/profile/:id" element={<Profile />} />
               <Route exact path="/forum" element={<Forum />} />

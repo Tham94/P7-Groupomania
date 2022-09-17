@@ -1,23 +1,19 @@
 import Like from './Post/Like';
-import AxiosClient from '../client/AxiosClient';
 import { useEffect, useState, useContext } from 'react';
-import { getToken } from '../services/LocalStorage';
 import { dateStringifier, sortByDate } from '../utils/DateHandling';
 import Auth from '../contexts/Auth';
 import InteractPost from './Post/InteractPost';
 
 /**
- * [  Affichage de tous les posts par ordre antéchronologique
- *    Get tous les posts / users (pour récupérer leurs nom, prénom)
- *    Récupération du context user (user connecté ou admin) pour afficher les icones de modif/suppression
- *    Sauvegarde des tables dans le localStorage
- *    ]
+ * [  Affichage de tous les posts  :
+ *    - Récupération du context user (user connecté ou admin) pour afficher les icones de modif/suppression
+ *    - Récupération du context users & posts pour affichage des données dans les articles
+ *    - tri des posts par ordre antéchronologique
+ *
  * @return  {JSX.Element}  [Composant affichant les posts]
  */
 function DisplayPost() {
-  const { user } = useContext(Auth);
-  const [posts, setPosts] = useState([]);
-  const [users, setUsers] = useState([]);
+  const { user, allPosts, allUsers } = useContext(Auth);
 
   const [showTopBtn, setShowTopBtn] = useState(false);
 
@@ -26,37 +22,6 @@ function DisplayPost() {
       return true;
     }
   };
-
-  async function fetchPosts() {
-    const userToken = getToken('sessionToken');
-    try {
-      const response = await AxiosClient({
-        url: 'api/posts/',
-        headers: { Authorization: 'Bearer ' + userToken },
-      });
-      setPosts(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async function fetchUsers(token) {
-    const userToken = getToken('sessionToken', token);
-    try {
-      const response = await AxiosClient({
-        url: 'api/auth/users/',
-        headers: { Authorization: 'Bearer ' + userToken },
-      });
-      setUsers(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-  useEffect(() => {
-    fetchPosts();
-  }, []);
 
   useEffect(() => {
     window.addEventListener('scroll', () => {
@@ -70,14 +35,19 @@ function DisplayPost() {
 
   return (
     <>
-      {posts &&
-        posts.sort(sortByDate).map((post) => {
-          const postAuthor = users.find((user) => user.id === post.authorId);
+      {allPosts &&
+        allPosts.sort(sortByDate).map((post) => {
+          const postAuthor = allUsers.find((user) => user.id === post.authorId);
           const authUser = () => {
             if (user.id === postAuthor.id) {
               return true;
             }
           };
+          /**
+           * [Affichage du prénom et nom de l'utilisateur s'il en a un sinon affichage de son email]
+           *
+           * @return  {string}  [ Email de l'utilisateur ||  nom et prénom ]
+           */
           const userIdentification = () => {
             if (postAuthor.name === null && postAuthor.lastName === null) {
               return postAuthor.email;
@@ -119,7 +89,12 @@ function DisplayPost() {
               <Like likes={post.likes} dislikes={post.dislikes} id={post.id} />
 
               {(isAdmin() === true || authUser() === true) && (
-                <InteractPost id={post.id} />
+                <InteractPost
+                  id={post.id}
+                  title={post.title}
+                  content={post.content}
+                  imageUrl={post.imageUrl}
+                />
               )}
             </article>
           );

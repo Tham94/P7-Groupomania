@@ -3,6 +3,7 @@ import React from 'react';
 export default React.createContext({
   isAuthenticated: false,
   setIsAuthenticated: (value) => {},
+
   user: {
     id: 0,
     email: '',
@@ -13,8 +14,16 @@ export default React.createContext({
     password: '',
   },
   setUser: (value) => {},
+
+  allUsers: [],
+  setAllUsers: (value) => [],
+
+  allPosts: [],
+  setAllPosts: (value) => [],
+
   likes: [],
-  dislikes: [],
   setLikes: (value) => [],
+
+  dislikes: [],
   setDislikes: (value) => [],
 });
