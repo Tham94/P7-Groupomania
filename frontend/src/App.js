@@ -16,6 +16,7 @@ import Auth from './contexts/Auth';
 import AuthenticatedRoute from './components/AuthenticatedRoute';
 import { getToken } from './services/LocalStorage';
 import AxiosClient from './client/AxiosClient';
+import Data from './contexts/Data';
 
 function App() {
   /* State pour authentifier la connexion (true/false) */
@@ -25,37 +26,9 @@ function App() {
   /* State pour maintenir afficher les données de l'API */
   const [allUsers, setAllUsers] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
-  /* State pour maintenir les tables avec le localStorage */
+  /* State pour maintenir les tables likes et dislikes */
   const [likes, setLikes] = useState([]);
   const [dislikes, setDislikes] = useState([]);
-
-  useEffect(() => {
-    const token = getToken('sessionToken');
-    const fetchUsers = async () => {
-      if (token) {
-        const response = await AxiosClient({
-          url: 'api/auth/users/',
-          headers: { Authorization: 'Bearer ' + token },
-        });
-        setAllUsers(response.data);
-      }
-    };
-    fetchUsers().catch(console.error);
-  }, []);
-
-  useEffect(() => {
-    const token = getToken('sessionToken');
-    const fetchPosts = async () => {
-      if (token) {
-        const response = await AxiosClient({
-          url: 'api/posts/',
-          headers: { Authorization: 'Bearer ' + token },
-        });
-        setAllPosts(response.data);
-      }
-    };
-    fetchPosts().catch(console.error);
-  }, []);
 
   useEffect(() => {
     const token = getToken('sessionToken');
@@ -74,6 +47,34 @@ function App() {
 
   useEffect(() => {
     const token = getToken('sessionToken');
+    const fetchUsers = async () => {
+      if (token) {
+        const response = await AxiosClient({
+          url: 'api/auth/users/',
+          headers: { Authorization: 'Bearer ' + token },
+        });
+        setAllUsers(response.data);
+      }
+    };
+    fetchUsers().catch(console.error);
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    const token = getToken('sessionToken');
+    const fetchPosts = async () => {
+      if (token) {
+        const response = await AxiosClient({
+          url: 'api/posts/',
+          headers: { Authorization: 'Bearer ' + token },
+        });
+        setAllPosts(response.data);
+      }
+    };
+    fetchPosts().catch(console.error);
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    const token = getToken('sessionToken');
     const fetchLikes = async () => {
       if (token) {
         const response = await AxiosClient({
@@ -85,7 +86,7 @@ function App() {
       }
     };
     fetchLikes().catch(console.error);
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const token = getToken('sessionToken');
@@ -100,7 +101,7 @@ function App() {
       }
     };
     fetchDislikes().catch(console.error);
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <Auth.Provider
@@ -109,28 +110,33 @@ function App() {
         setIsAuthenticated,
         user,
         setUser,
-        allUsers,
-        setAllUsers,
-        allPosts,
-        setAllPosts,
-        likes,
-        setLikes,
-        dislikes,
-        setDislikes,
       }}
     >
       <div className="App">
-        <Layout>
-          <Routes>
-            <Route path="*" element={<Navigate to={'/login'} />} />
-            <Route exact path="/login" element={<Home />} />
-            <Route exact path="/signup" element={<SignUp />} />
-            <Route element={<AuthenticatedRoute />}>
-              <Route exact path="/profile/:id" element={<Profile />} />
-              <Route exact path="/forum" element={<Forum />} />
-            </Route>
-          </Routes>
-        </Layout>
+        <Data.Provider
+          value={{
+            allUsers,
+            setAllUsers,
+            allPosts,
+            setAllPosts,
+            likes,
+            setLikes,
+            dislikes,
+            setDislikes,
+          }}
+        >
+          <Layout>
+            <Routes>
+              <Route path="*" element={<Navigate to={'/login'} />} />
+              <Route exact path="/login" element={<Home />} />
+              <Route exact path="/signup" element={<SignUp />} />
+              <Route element={<AuthenticatedRoute />}>
+                <Route exact path="/profile/:id" element={<Profile />} />
+                <Route exact path="/forum" element={<Forum />} />
+              </Route>
+            </Routes>
+          </Layout>
+        </Data.Provider>
       </div>
       <ToastContainer />
     </Auth.Provider>

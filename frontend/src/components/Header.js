@@ -4,25 +4,51 @@ import React, { useContext } from 'react';
 import Auth from '../contexts/Auth';
 import { logOut } from '../services/AuthApi';
 import { toast } from 'react-toastify';
+import Data from '../contexts/Data';
 
 function Header() {
-  const {
-    isAuthenticated,
-    setIsAuthenticated,
-    user,
-    setUser,
-    setLikes,
-    setDislikes,
-  } = useContext(Auth);
+  const { isAuthenticated, setIsAuthenticated, user, setUser } =
+    useContext(Auth);
+  const { setLikes, setDislikes, setAllPosts, setAllUsers } = useContext(Data);
 
+  /**
+   * [ Suite à un mauvais naming de id (id pour le backend - userId pour le token)
+   * cette fonction permet de pouvoir utiliser un de ces 2 id qui ne soit pas undefined ]
+   *
+   * @return  {number}  [id du user venant du token || id venant du context(backend)]
+   */
+  const userIdChecked = () => {
+    if (user.userId !== undefined) {
+      return user.userId;
+    } else {
+      return user.id;
+    }
+  };
+
+  /**
+   * [ Déconnexion de l'utilisateur :
+   * - Demande de confirmation avant déconnexion
+   * - Suppression du token dans le localStorage => redirection vers login
+   * - Réinitialisation du Context
+   * - Affichage d'un toast  ]
+   *
+   */
   const handleLogOut = () => {
     const confirmation = window.confirm('Voulez-vous vous déconnecté?');
     if (confirmation) {
       logOut();
       setIsAuthenticated(false);
       setUser({});
+      setAllPosts([]);
+      setAllUsers([]);
       setLikes([]);
       setDislikes([]);
+      /**
+       * [ L'utlilisateur s'étant inscrit uniquement avec son email, le toast ne sera pas personnalisé
+       *  si le prénom est absent, on aura la partie locale de l'email  ]
+       *
+       * @return  {[String]}  [Prénom de l'utilisateur || Partie locale de l'email de l'utilisateur ]
+       */
       function userNotNull() {
         if (user.name !== null) {
           return user.name;
@@ -94,7 +120,7 @@ function Header() {
               </li>
               <li>
                 <NavLink
-                  to={`/profile/${user.id}`}
+                  to={`/profile/${userIdChecked()}`}
                   className={({ isActive }) =>
                     isActive ? 'activeLink' : undefined
                   }

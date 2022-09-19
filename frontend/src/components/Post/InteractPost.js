@@ -34,9 +34,9 @@ function InteractPost(props) {
     if (isUpdated || isDeleted) {
       setTimeout(() => {
         document.location.reload();
-      }, 1000);
+      }, 1500);
       if (isDeleted) {
-        toast.info(`Supprimé`, {
+        toast.info(`Suppression en cours`, {
           position: 'top-center',
           autoClose: 1000,
           pauseOnHover: false,
@@ -45,7 +45,7 @@ function InteractPost(props) {
       if (isUpdated) {
         toast.info(`Message modifié`, {
           position: 'top-center',
-          autoClose: 1500,
+          autoClose: 1000,
           pauseOnHover: false,
         });
       }

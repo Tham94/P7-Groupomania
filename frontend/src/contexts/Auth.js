@@ -14,16 +14,4 @@ export default React.createContext({
     password: '',
   },
   setUser: (value) => {},
-
-  allUsers: [],
-  setAllUsers: (value) => [],
-
-  allPosts: [],
-  setAllPosts: (value) => [],
-
-  likes: [],
-  setLikes: (value) => [],
-
-  dislikes: [],
-  setDislikes: (value) => [],
 });

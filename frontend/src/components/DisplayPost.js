@@ -2,6 +2,7 @@ import Like from './Post/Like';
 import { useEffect, useState, useContext } from 'react';
 import { dateStringifier, sortByDate } from '../utils/DateHandling';
 import Auth from '../contexts/Auth';
+import Data from '../contexts/Data';
 import InteractPost from './Post/InteractPost';
 
 /**
@@ -13,7 +14,8 @@ import InteractPost from './Post/InteractPost';
  * @return  {JSX.Element}  [Composant affichant les posts]
  */
 function DisplayPost() {
-  const { user, allPosts, allUsers } = useContext(Auth);
+  const { user } = useContext(Auth);
+  const { allPosts, allUsers } = useContext(Data);
 
   const [showTopBtn, setShowTopBtn] = useState(false);
 
@@ -35,11 +37,12 @@ function DisplayPost() {
 
   return (
     <>
-      {allPosts &&
+      {allUsers[0] !== undefined &&
+        allPosts &&
         allPosts.sort(sortByDate).map((post) => {
           const postAuthor = allUsers.find((user) => user.id === post.authorId);
           const authUser = () => {
-            if (user.id === postAuthor.id) {
+            if ((user.id || user.userId) === postAuthor.id) {
               return true;
             }
           };

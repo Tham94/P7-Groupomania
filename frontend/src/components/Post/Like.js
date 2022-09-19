@@ -2,20 +2,40 @@ import AxiosLike from '../../client/AxiosLike';
 import { getToken } from '../../services/LocalStorage';
 import { useState, useContext } from 'react';
 import Auth from '../../contexts/Auth';
+import Data from '../../contexts/Data';
 
 function Like(props) {
   const userToken = getToken('sessionToken');
 
-  const { user, likes, dislikes, setLikes, setDislikes } = useContext(Auth);
+  const { user } = useContext(Auth);
+  const { likes, dislikes, setLikes, setDislikes } = useContext(Data);
   const newLikesTable = likes.slice();
   const newDislikeTable = dislikes.slice();
 
   const [likesCount, setLikesCount] = useState(props.likes);
   const [dislikesCount, setDislikesCount] = useState(props.dislikes);
+  /**
+   * [ Suite à un mauvais naming de id (id pour le backend - userId pour le token)
+   * cette fonction permet de pouvoir utiliser un de ces 2 id qui ne soit pas undefined ]
+   *
+   * @return  {number}  [id du user venant du token || id venant du context(backend)]
+   */
+  const userIdChecked = () => {
+    if (user.userId !== undefined) {
+      return user.userId;
+    } else {
+      return user.id;
+    }
+  };
 
+  /**
+   * [Chercher dans la table likes quand le user connecté et le post correspond]
+   *
+   * @return  {boolean}  [true si le like est trouvé dans la table sinon false]
+   */
   const isLiked = () => {
     const rowFound = likes.find(
-      (row) => row.user_id === user.id && row.post_id === props.id
+      (row) => row.user_id === userIdChecked() && row.post_id === props.id
     );
     if (rowFound !== undefined) {
       return true;
@@ -30,7 +50,7 @@ function Like(props) {
    */
   const isDisliked = () => {
     const rowFound = dislikes.find(
-      (row) => row.user_id === user.id && row.post_id === props.id
+      (row) => row.user_id === userIdChecked() && row.post_id === props.id
     );
     if (rowFound !== undefined) {
       return true;
@@ -72,7 +92,7 @@ function Like(props) {
       });
       setLikesCount((previousCount) => previousCount + 1);
       const newRow = {
-        user_id: user.id,
+        user_id: userIdChecked(),
         post_id: props.id,
         likes: true,
       };
@@ -83,7 +103,8 @@ function Like(props) {
       removeLike();
       setLikesCount((previousCount) => previousCount - 1);
       const rowsToKeep = likes.filter(
-        (toKeep) => toKeep.user_id !== user.id || toKeep.post_id !== props.id
+        (toKeep) =>
+          toKeep.user_id !== userIdChecked() || toKeep.post_id !== props.id
       );
       setLikes(rowsToKeep);
     }
@@ -110,7 +131,7 @@ function Like(props) {
       });
       setDislikesCount((previousCount) => previousCount + 1);
       const newRow = {
-        user_id: user.id,
+        user_id: userIdChecked(),
         post_id: props.id,
         likes: false,
       };
@@ -120,7 +141,8 @@ function Like(props) {
       removeLike();
       setDislikesCount((previousCount) => previousCount - 1);
       const rowsToKeep = dislikes.filter(
-        (toKeep) => toKeep.user_id !== user.id || toKeep.post_id !== props.id
+        (toKeep) =>
+          toKeep.user_id !== userIdChecked() || toKeep.post_id !== props.id
       );
       setDislikes(rowsToKeep);
     }

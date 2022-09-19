@@ -37,9 +37,11 @@ function LoginForm() {
   const handleLogin = async ({ email, password }) => {
     const loginResponse = await login({ email, password });
     const userDetails = loginResponse.user;
+
     if (loginResponse.success === true) {
       setIsAuthenticated(loginResponse.success);
       setUser(userDetails);
+
       function userNotNull() {
         if (userDetails.name !== null) {
           return userDetails.name;
