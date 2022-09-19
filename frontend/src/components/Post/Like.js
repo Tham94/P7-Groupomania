@@ -87,7 +87,7 @@ function Like(props) {
       newLikesTable.push(newRow);
       setLikes(newLikesTable);
     } else {
-      removeLike();
+      await removeLike();
       setLikesCount((previousCount) => previousCount - 1);
       const rowsToKeep = likes.filter(
         (toKeep) => toKeep.user_id !== user.id || toKeep.post_id !== props.id
@@ -124,7 +124,7 @@ function Like(props) {
       newDislikeTable.push(newRow);
       setDislikes(newDislikeTable);
     } else {
-      removeLike();
+      await removeLike();
       setDislikesCount((previousCount) => previousCount - 1);
       const rowsToKeep = dislikes.filter(
         (toKeep) => toKeep.user_id !== user.id || toKeep.post_id !== props.id

@@ -70,10 +70,6 @@ exports.login = async (req, res) => {
               {
                 id: user.id,
                 role: user.role,
-                name: user.name,
-                lastName: user.lastName,
-                email: user.email,
-                imageUrl: user.imageUrl,
               },
               process.env.SECRET_KEY_SALTED,
               {
@@ -90,12 +86,12 @@ exports.login = async (req, res) => {
 };
 
 exports.updateUserName = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.auth;
   const { name } = req.body;
 
   try {
     await prisma.user.update({
-      where: { id: parseInt(id) },
+      where: { id: id },
       data: { name },
     });
     res.status(201).json({ message: 'Le prénom a bien été modifié' });
@@ -105,12 +101,12 @@ exports.updateUserName = async (req, res) => {
 };
 
 exports.updateUserLastName = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.auth;
   const { lastName } = req.body;
 
   try {
     await prisma.user.update({
-      where: { id: parseInt(id) },
+      where: { id: id },
       data: { lastName },
     });
     res.status(201).json({ message: 'Le nom a bien été modifié' });
