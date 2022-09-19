@@ -85,64 +85,75 @@ function InteractPost(props) {
   return (
     <>
       <div className="Interacting__post">
-        <div
-          onClick={() => {
-            setIsUpdating(true);
-          }}
-        >
-          <div>
-            {isUpdating && (
-              <form className="Forum__post" encType="multipart/form-data">
-                <input
-                  type="text"
-                  className="Forum__post-title"
-                  required
-                  placeholder="Titre *"
-                  name="title"
-                  aria-label="titre du post"
-                  autoFocus={true}
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                  }}
-                />
-                <textarea
-                  className="Forum__post-content"
-                  placeholder="Ton message"
-                  name="content"
-                  aria-label="contenu du post"
-                  value={content}
-                  onChange={(e) => {
-                    setContent(e.target.value);
-                  }}
-                />
-                <input
-                  type="file"
-                  name="image"
-                  id="img-upload"
-                  className="Forum__post-img"
-                  accept=".png, .jpg, .jpeg"
-                  aria-label="ajouter image"
-                  onChange={(e) => {
-                    setImage(e.target.files[0]);
-                  }}
-                />
-                <button
-                  type="submit"
-                  className="Forum__post-submit"
-                  onClick={modifyPost}
-                >
-                  {' '}
-                  Modifier
-                </button>
-              </form>
-            )}
-          </div>
-          <i className="fa-solid fa-pencil Modifying__post-icon"></i>
-        </div>
-        <div onClick={deletePost}>
-          <i className="fa-solid fa-trash Deleting__post-icon"></i>
-        </div>
+        {!isUpdating && (
+          <>
+            <div
+              onClick={() => {
+                setIsUpdating(true);
+              }}
+            >
+              <i className="fa-solid fa-pencil Modifying__post-icon"></i>
+            </div>
+            <div onClick={deletePost}>
+              <i className="fa-solid fa-trash Deleting__post-icon"></i>
+            </div>
+          </>
+        )}
+
+        {isUpdating && (
+          <>
+            <form className="Forum__post" encType="multipart/form-data">
+              <input
+                type="text"
+                className="Forum__post-title"
+                required
+                placeholder="Titre *"
+                name="title"
+                aria-label="titre du post"
+                autoFocus={true}
+                value={title}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                }}
+              />
+              <textarea
+                className="Forum__post-content"
+                placeholder="Ton message"
+                name="content"
+                aria-label="contenu du post"
+                value={content}
+                onChange={(e) => {
+                  setContent(e.target.value);
+                }}
+              />
+              <input
+                type="file"
+                name="image"
+                id="img-upload"
+                className="Forum__post-img"
+                accept=".png, .jpg, .jpeg"
+                aria-label="ajouter image"
+                onChange={(e) => {
+                  setImage(e.target.files[0]);
+                }}
+              />
+              <button
+                type="submit"
+                className="Forum__post-submit"
+                onClick={modifyPost}
+              >
+                Modifier
+              </button>
+              <div
+                className="Cancel-modif"
+                onClick={() => setIsUpdating(false)}
+              >
+                Annuler Modification
+                <i class="fa-solid fa-eject Modifying__post-icon"></i>
+              </div>
+            </form>
+          </>
+        )}
       </div>
     </>
   );
