@@ -13,9 +13,9 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.getOneUser = async (req, res) => {
-  const { userId } = req.auth;
+  const { id } = req.auth;
   try {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({ where: { id: id } });
     res.status(200).json(user);
   } catch (error) {
     res.status(400).json(error);
@@ -65,10 +65,10 @@ exports.login = async (req, res) => {
             email: user.email,
             imageUrl: user.imageUrl,
             role: user.role,
-            userId: user.id,
+            id: user.id,
             token: jwt.sign(
               {
-                userId: user.id,
+                id: user.id,
                 role: user.role,
                 name: user.name,
                 lastName: user.lastName,
@@ -121,7 +121,7 @@ exports.updateUserLastName = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   const { id } = req.params;
-  const authUser = req.auth.userId;
+  const authUser = req.auth.id;
   const role = req.auth.role;
   /* Récupération de tous les Urls des images dans un tableau avant suppression */
   const allPostsOfUser = await prisma.post.findMany({
@@ -133,7 +133,7 @@ exports.deleteUser = async (req, res) => {
   });
 
   try {
-    if (authUser === parseInt(id) || role === 'admin') {
+    if (authUser === parseInt(id) && role === 'member') {
       // Suppression de toutes les images postées par le user
       for (let i = 0; i < allUrl.length; i++) {
         let filename = allUrl[i].split('/images/')[1];
@@ -141,9 +141,9 @@ exports.deleteUser = async (req, res) => {
           return;
         });
       }
-      await prisma.user.delete({ where: { id: id } });
+      await prisma.user.delete({ where: { id: authUser } });
       res.status(200).json({
-        message: `Le compte de l'utilisateur n° ${id} a bien été supprimé`,
+        message: `Le compte de l'utilisateur n° ${authUser} a bien été supprimé`,
       });
     } else {
       res.status(403).json({

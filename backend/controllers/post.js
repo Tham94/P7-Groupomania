@@ -47,7 +47,7 @@ exports.getOnePost = async (req, res) => {
 exports.createPost = async (req, res) => {
   const { title, content } = req.body;
   const image = req.file;
-  const authUser = req.auth.userId;
+  const authUser = req.auth.id;
   try {
     image === undefined
       ? await prisma.post.create({
@@ -86,7 +86,7 @@ exports.createPost = async (req, res) => {
  * - modifier l'image postée
  */
 exports.updatePost = async (req, res) => {
-  const authUser = req.auth.userId;
+  const authUser = req.auth.id;
   const role = req.auth.role;
   const { id } = req.params;
   const post = await prisma.post.findUnique({ where: { id: parseInt(id) } });
@@ -155,7 +155,7 @@ exports.updatePost = async (req, res) => {
  * - avec image
  */
 exports.deletePost = async (req, res) => {
-  const authUser = req.auth.userId;
+  const authUser = req.auth.id;
   const role = req.auth.role;
   const postId = parseInt(req.params.id);
   const post = await prisma.post.findUnique({ where: { id: postId } });
@@ -185,7 +185,7 @@ exports.deletePost = async (req, res) => {
 };
 
 exports.getLikes = async (req, res) => {
-  const authUser = req.auth.userId;
+  const authUser = req.auth.id;
   try {
     const result = await prisma.user_post_like.findMany({
       where: { user_id: authUser, likes: true },
@@ -197,7 +197,7 @@ exports.getLikes = async (req, res) => {
 };
 
 exports.getDislikes = async (req, res) => {
-  const authUser = req.auth.userId;
+  const authUser = req.auth.id;
   try {
     const result = await prisma.user_post_like.findMany({
       where: { user_id: authUser, likes: false },
@@ -219,7 +219,7 @@ exports.getDislikes = async (req, res) => {
  *
  */
 exports.likePost = async (req, res) => {
-  const authUser = req.auth.userId;
+  const authUser = req.auth.id;
   const { like } = req.body;
   const postId = parseInt(req.params.id);
   const post = await prisma.post.findUnique({ where: { id: postId } });

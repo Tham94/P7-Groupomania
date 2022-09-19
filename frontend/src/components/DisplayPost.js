@@ -42,7 +42,7 @@ function DisplayPost() {
         allPosts.sort(sortByDate).map((post) => {
           const postAuthor = allUsers.find((user) => user.id === post.authorId);
           const authUser = () => {
-            if ((user.id || user.userId) === postAuthor.id) {
+            if (user.id === postAuthor.id) {
               return true;
             }
           };

@@ -12,20 +12,6 @@ function Header() {
   const { setLikes, setDislikes, setAllPosts, setAllUsers } = useContext(Data);
 
   /**
-   * [ Suite à un mauvais naming de id (id pour le backend - userId pour le token)
-   * cette fonction permet de pouvoir utiliser un de ces 2 id qui ne soit pas undefined ]
-   *
-   * @return  {number}  [id du user venant du token || id venant du context(backend)]
-   */
-  const userIdChecked = () => {
-    if (user.userId !== undefined) {
-      return user.userId;
-    } else {
-      return user.id;
-    }
-  };
-
-  /**
    * [ Déconnexion de l'utilisateur :
    * - Demande de confirmation avant déconnexion
    * - Suppression du token dans le localStorage => redirection vers login
@@ -120,7 +106,7 @@ function Header() {
               </li>
               <li>
                 <NavLink
-                  to={`/profile/${userIdChecked()}`}
+                  to={`/profile/${user.id}`}
                   className={({ isActive }) =>
                     isActive ? 'activeLink' : undefined
                   }
