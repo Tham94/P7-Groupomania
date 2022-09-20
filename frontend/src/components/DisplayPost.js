@@ -4,12 +4,14 @@ import { dateStringifier, sortByDate } from '../utils/DateHandling';
 import Auth from '../contexts/Auth';
 import Data from '../contexts/Data';
 import InteractPost from './Post/InteractPost';
+import DeleteImage from './Post/DeleteImage';
 
 /**
  * [  Affichage de tous les posts  :
  *    - Récupération du context user (user connecté ou admin) pour afficher les icones de modif/suppression
  *    - Récupération du context users & posts pour affichage des données dans les articles
  *    - tri des posts par ordre antéchronologique
+ *    - bouton qui permet de ramener en haut de la fenêtre
  *
  * @return  {JSX.Element}  [Composant affichant les posts]
  */
@@ -74,6 +76,7 @@ function DisplayPost() {
                 </div>
               </header>
               <h2 className="Display__post-title">{post.title} </h2>
+
               {post.imageUrl && (
                 <a
                   href={post.imageUrl}
@@ -87,6 +90,11 @@ function DisplayPost() {
                   ></img>
                 </a>
               )}
+
+              {post.imageUrl && (isAdmin() === true || authUser() === true) && (
+                <DeleteImage id={post.id} />
+              )}
+
               <div className="Display__post-content">{post.content}</div>
 
               <Like likes={post.likes} dislikes={post.dislikes} id={post.id} />
@@ -102,6 +110,7 @@ function DisplayPost() {
             </article>
           );
         })}
+
       {showTopBtn && (
         <button
           onClick={() => {

@@ -91,6 +91,22 @@
     }
   }
 }
+.DeleteImg-btn {
+  width: 25%;
+  font-size: 0.9em;
+  padding: 2px;
+  font-weight: 700;
+  border: 1px solid $color-primary;
+  border-radius: 5px;
+  background-color: $white;
+  &:hover {
+    cursor: pointer;
+    color: $color-primary;
+    &:active {
+      translate: 0px 1px;
+    }
+  }
+}
 
 .LikeOrNot {
   display: flex;

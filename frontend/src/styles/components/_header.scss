@@ -9,19 +9,16 @@
   }
   &__logo-container {
     width: 50%;
-    @include tablet-screen {
-      width: 100%;
-    }
-    @include mobile-screen {
-      width: 50%;
-    }
   }
   &__logo-pic {
     width: 50%;
     padding: 10px;
+    @include tablet-screen {
+      width: 70%;
+    }
     @include mobile-screen {
       width: 80%;
-      padding: 20px 0%;
+      padding: 10px 0%;
     }
   }
   & > nav {

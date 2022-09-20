@@ -11,6 +11,7 @@ router.get('/dislikes', auth, postCtrl.getDislikes);
 router.get('/:id', postCtrl.getOnePost);
 router.post('/', auth, multer, postCtrl.createPost);
 router.put('/:id', auth, multer, postCtrl.updatePost);
+router.put('/:id/image', auth, multer, postCtrl.deleteImage);
 router.delete('/:id', auth, postCtrl.deletePost);
 router.post('/:id/like', auth, postCtrl.likePost);
 

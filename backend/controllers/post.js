@@ -148,6 +148,35 @@ exports.updatePost = async (req, res) => {
 };
 
 /**
+ * [Suppression de l'image du post :
+ * - suppression de l'image dans le stockage local
+ * - envoyer la valeur null à la clé "imageUrl" du post ]
+ *
+ * @param   {[type]}  req  [requete]
+ * @param   {[type]}  res  [reponse]
+ *
+ */
+exports.deleteImage = async (req, res) => {
+  const authUser = req.auth.id;
+  const role = req.auth.role;
+  const postId = parseInt(req.params.id);
+  const post = await prisma.post.findUnique({ where: { id: postId } });
+  try {
+    if (authUser === post.authorId || role === 'admin') {
+      fs.unlink(`images/${post.imageUrl.split('/images/')[1]}`, async () => {
+        await prisma.post.update({
+          where: { id: postId },
+          data: { imageUrl: null },
+        });
+      });
+      res.status(200).json({ message: `L'\image a bien été supprimé` });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+/**
  * [deletePost description]
  *
  * Suppression d'un post :
