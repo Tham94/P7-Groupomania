@@ -89,7 +89,8 @@
       font-size: 0.9em;
     }
   }
-  &-submit {
+  &-submit,
+  .Cancel-modif {
     width: 100px;
     margin: 5px 0;
     padding: 5px;
@@ -109,4 +110,15 @@
       box-shadow: none;
     }
   }
+  &-modify-btn {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: space-around;
+  }
+}
+
+.Cancel-modif {
+  text-align: center;
+  line-height: 25px;
 }

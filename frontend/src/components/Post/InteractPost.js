@@ -102,7 +102,11 @@ function InteractPost(props) {
 
         {isUpdating && (
           <>
-            <form className="Forum__post" encType="multipart/form-data">
+            <form
+              className="Forum__post"
+              encType="multipart/form-data"
+              onSubmit={modifyPost}
+            >
               <input
                 type="text"
                 className="Forum__post-title"
@@ -137,19 +141,16 @@ function InteractPost(props) {
                   setImage(e.target.files[0]);
                 }}
               />
-              <button
-                type="submit"
-                className="Forum__post-submit"
-                onClick={modifyPost}
-              >
-                Modifier
-              </button>
-              <div
-                className="Cancel-modif"
-                onClick={() => setIsUpdating(false)}
-              >
-                Annuler Modification
-                <i class="fa-solid fa-eject Modifying__post-icon"></i>
+              <div className="Forum__post-modify-btn">
+                <button type="submit" className="Forum__post-submit">
+                  Modifier
+                </button>
+                <div
+                  className="Cancel-modif"
+                  onClick={() => setIsUpdating(false)}
+                >
+                  Annuler
+                </div>
               </div>
             </form>
           </>
