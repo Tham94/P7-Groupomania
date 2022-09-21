@@ -33,6 +33,19 @@
     height: 100%;
     width: 100%;
     object-fit: cover;
+    &-modifyier {
+      display: flex;
+      flex-direction: column;
+    }
+    &-label {
+      margin-top: 5px;
+      font-size: 00.9em;
+      text-decoration: underline;
+    }
+    &-selector {
+      margin-top: 2px;
+      font-size: 0.8em;
+    }
   }
   &__user {
     width: 100%;
@@ -53,6 +66,10 @@
     @include mobile-screen {
       width: 85%;
     }
+  }
+  &__delete-handler {
+    display: flex;
+    justify-content: space-between;
   }
 }
 
@@ -75,12 +92,13 @@
   }
 }
 
-.Unsuscribe {
+.Unsubscribe,
+.Profile__pic-btn {
   margin: 5px 0px;
   width: 25%;
   margin-left: auto;
   margin-right: auto;
-  font-size: 00.85em;
+  font-size: 0.9em;
   font-weight: 700;
   border: 1px solid $color-primary;
   border-radius: 5px;
@@ -88,7 +106,6 @@
   &:hover {
     cursor: pointer;
     color: $color-primary;
-
     &:active {
       translate: 0px 1px;
     }

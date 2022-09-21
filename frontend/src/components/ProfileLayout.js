@@ -36,12 +36,44 @@ function ProfileLayout() {
           'Content-Type': 'multipart/form-data',
           data: userImage,
         });
+        toast.success('Image de profil modifié', {
+          position: 'top-center',
+          autoClose: 1000,
+          closeOnClick: false,
+          pauseOnHover: false,
+        });
         window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } catch (error) {
         console.log(error);
       }
     } else {
       return;
+    }
+  };
+
+  const deleteImage = async () => {
+    try {
+      await AxiosClient({
+        method: 'put',
+        url: `api/auth/users/${user.id}/image/delete`,
+        headers: { Authorization: 'Bearer ' + token },
+        data: { imageUrl: null },
+      });
+      toast.success('Image de profil supprimée', {
+        position: 'top-center',
+        autoClose: 1000,
+        closeOnClick: false,
+        pauseOnHover: false,
+      });
+      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -116,25 +148,33 @@ function ProfileLayout() {
           src={user.imageUrl}
         ></img>
         <div>
-          <label htmlFor="image"> Modifier votre image de profil</label>
-          <input
-            type="file"
-            name="image"
-            id="img-upload"
-            className="Profile__pic-selector"
-            accept=".png, .jpg, .jpeg"
-            onChange={(e) => {
-              setImage(e.target.files[0]);
-            }}
-          />
-          <button
-            type="submit"
-            onClick={() => {
-              modifyImage();
-            }}
-          >
-            Valider
-          </button>
+          <div className="Profile__pic-modifyier">
+            <label htmlFor="image" className="Profile__pic-label">
+              Modifier votre image de profil
+            </label>
+            <input
+              type="file"
+              name="image"
+              id="img-upload"
+              className="Profile__pic-selector"
+              accept=".png, .jpg, .jpeg"
+              onChange={(e) => {
+                setImage(e.target.files[0]);
+              }}
+            />
+          </div>
+
+          {image !== undefined && (
+            <button
+              className="Profile__pic-btn"
+              type="submit"
+              onClick={() => {
+                modifyImage();
+              }}
+            >
+              Valider image
+            </button>
+          )}
         </div>
       </div>
 
@@ -223,11 +263,24 @@ function ProfileLayout() {
         <div className="Profile__user-details">
           E-mail : <span className="User__email">{user.email}</span>
         </div>
-        {!isAdmin() && (
-          <button type="submit" className="Unsuscribe" onClick={deleteUser}>
-            Se désinscrire
-          </button>
-        )}
+        <div className="Profile__delete-handler">
+          {user.imageUrl && image === undefined && (
+            <button
+              type="submit"
+              className="Profile__pic-btn"
+              onClick={() => {
+                deleteImage();
+              }}
+            >
+              Supprimer image
+            </button>
+          )}
+          {!isAdmin() && (
+            <button type="submit" className="Unsubscribe" onClick={deleteUser}>
+              Se désinscrire
+            </button>
+          )}
+        </div>
       </div>
     </section>
   );
