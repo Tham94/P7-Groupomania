@@ -72,7 +72,7 @@ function DisplayPost() {
                   </div>
                 </div>
                 <div className="Display__user-pic">
-                  <img alt="photo_de_profil" src={user.imageUrl} />
+                  <img alt="photo_de_profil" src={postAuthor.imageUrl} />
                 </div>
               </header>
               <h2 className="Display__post-title">{post.title} </h2>

@@ -23,19 +23,25 @@ function ProfileLayout() {
       return false;
     }
   };
+
   const modifyImage = async () => {
-    const file = new FormData();
-    file.append('image', image);
-    try {
-      await AxiosClient({
-        method: 'put',
-        url: `api/auth/users/${user.id}/image`,
-        headers: { Authorization: 'Bearer ' + token },
-        'Content-Type': 'multipart/form-data',
-        data: { file },
-      });
-    } catch (error) {
-      console.log(error);
+    const userImage = new FormData();
+    userImage.append('image', image);
+    if (image !== undefined) {
+      try {
+        await AxiosClient({
+          method: 'put',
+          url: `api/auth/users/${user.id}/image`,
+          headers: { Authorization: 'Bearer ' + token },
+          'Content-Type': 'multipart/form-data',
+          data: userImage,
+        });
+        window.location.reload();
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      return;
     }
   };
 
@@ -110,6 +116,7 @@ function ProfileLayout() {
           src={user.imageUrl}
         ></img>
         <div>
+          <label htmlFor="image"> Modifier votre image de profil</label>
           <input
             type="file"
             name="image"
@@ -121,11 +128,12 @@ function ProfileLayout() {
             }}
           />
           <button
+            type="submit"
             onClick={() => {
               modifyImage();
             }}
           >
-            <i className="fa-solid fa-user-check Modifying__post-icon"></i>
+            Valider
           </button>
         </div>
       </div>

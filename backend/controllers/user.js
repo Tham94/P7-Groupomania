@@ -115,10 +115,43 @@ exports.updateUserLastName = async (req, res) => {
   }
 };
 
+exports.updateImageUser = async (req, res) => {
+  const { id } = req.auth;
+  const image = req.file;
+  const { remove } = req.body;
+  const user = await prisma.user.findUnique({ where: { id: id } });
+
+  try {
+    user.imageUrl === null
+      ? await prisma.user.update({
+          where: { id: id },
+          data: {
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${
+              image.filename
+            }`,
+          },
+        })
+      : fs.unlink(`images/${user.imageUrl.split('/images/')[1]}`, async () => {
+          await prisma.user.update({
+            where: { id: id },
+            data: {
+              imageUrl: `${req.protocol}://${req.get('host')}/images/${
+                image.filename
+              }`,
+            },
+          });
+        });
+    res.status(201).json({ message: "L'image a bien été modifié" });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
 exports.deleteUser = async (req, res) => {
   const { id } = req.params;
   const authUser = req.auth.id;
   const role = req.auth.role;
+  const user = await prisma.user.findUnique({ where: { id: authUser } });
   /* Récupération de tous les Urls des images dans un tableau avant suppression */
   const allPostsOfUser = await prisma.post.findMany({
     where: { authorId: authUser },
@@ -134,6 +167,12 @@ exports.deleteUser = async (req, res) => {
       for (let i = 0; i < allUrl.length; i++) {
         let filename = allUrl[i].split('/images/')[1];
         fs.unlink(`images/${filename}`, () => {
+          return;
+        });
+      }
+      // Suppression de l'image de profil
+      if (user.imageUrl !== null) {
+        fs.unlink(`images/${user.imageUrl.split('/images/')[1]}`, () => {
           return;
         });
       }
