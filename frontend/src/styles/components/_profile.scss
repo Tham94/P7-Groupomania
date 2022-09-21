@@ -24,6 +24,7 @@
   }
   &__pic-container {
     width: 75%;
+    max-height: 600px;
     overflow: hidden;
     @include mobile-screen {
       width: 85%;
@@ -62,7 +63,6 @@
     width: 75%;
     margin-left: auto;
     margin-right: auto;
-    // text-decoration: underline;
     @include mobile-screen {
       width: 85%;
     }
