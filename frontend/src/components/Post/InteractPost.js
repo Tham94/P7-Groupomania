@@ -111,10 +111,11 @@ function InteractPost(props) {
                 type="text"
                 className="Forum__post-title"
                 required
-                placeholder="Titre *"
+                placeholder="Titre * (50 caractères max.)"
                 name="title"
                 aria-label="titre du post"
                 autoFocus={true}
+                maxLength={50}
                 value={title}
                 onChange={(e) => {
                   setTitle(e.target.value);
@@ -122,9 +123,10 @@ function InteractPost(props) {
               />
               <textarea
                 className="Forum__post-content"
-                placeholder="Ton message"
+                placeholder="Ton message (500 caractères max.)"
                 name="content"
                 aria-label="contenu du post"
+                maxLength={500}
                 value={content}
                 onChange={(e) => {
                   setContent(e.target.value);

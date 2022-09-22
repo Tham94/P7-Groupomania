@@ -26,6 +26,7 @@ function ToModifyName() {
       });
       setUser({ ...user, name: nameUpdated });
       setIsUpdatingName(false);
+      document.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -53,6 +54,7 @@ function ToModifyName() {
               type="text"
               placeholder="Prénom"
               value={nameUpdated}
+              maxLength={20}
               aria-label="prénom utilisateur"
               onChange={(e) => setNameUpdated(e.target.value)}
             ></input>

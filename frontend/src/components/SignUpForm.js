@@ -55,20 +55,22 @@ function SignUpForm() {
             if (!values.email) {
               errors.email = 'Vous devez entrer votre e-mail';
             } else if (
-              !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+              !/^(?=^.{5,50}$)[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+                values.email
+              )
             ) {
-              errors.email = 'E-mail non valide';
+              errors.email = `E-mail non valide (doit contenir entre 5 et 50 caractères, '@', '.')`;
             }
 
             if (!values.password) {
               errors.password = 'Vous devez entrer un mot de passe';
             } else if (
               !values.password.match(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]{2})(?=.{8,50})/
+                /^(?=^.{8,50}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]{2})/
               )
             ) {
               errors.password =
-                'Doit contenir 8 caractères dont 1 majuscule, 1 minuscule et 2 chiffres';
+                'Doit contenir entre 8 et 50 caractères dont 1 majuscule, 1 minuscule et 2 chiffres';
             }
             return errors;
           }}
@@ -88,7 +90,7 @@ function SignUpForm() {
               component="span"
               className="Form__alert"
             />
-            <label htmlFor="password">Mot de passe *</label>
+            <label htmlFor="password">Mot de passe * </label>
             <Field
               type="password"
               id="password"

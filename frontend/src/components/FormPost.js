@@ -17,7 +17,7 @@ function FormPost() {
 
   useEffect(() => {
     if (isSubmited) {
-      window.location.reload();
+      document.location.reload();
     }
   }, [isSubmited]);
 
@@ -65,10 +65,11 @@ function FormPost() {
             type="text"
             className="Forum__post-title"
             required
-            placeholder="Titre *"
+            placeholder="Titre * (50 caractères max.)"
             name="title"
             aria-label="titre du post"
             autoFocus={true}
+            maxLength={50}
             onChange={(e) => {
               setTitle(e.target.value);
             }}
@@ -77,9 +78,10 @@ function FormPost() {
           <textarea
             type="text"
             className="Forum__post-content"
-            placeholder="Ton message"
+            placeholder="Ton message (500 caractères max.)"
             name="content"
             aria-label="contenu du post"
+            maxLength={500}
             onChange={(e) => {
               setContent(e.target.value);
             }}

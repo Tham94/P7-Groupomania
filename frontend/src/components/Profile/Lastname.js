@@ -26,6 +26,7 @@ function ToModifyLastName() {
       });
       setUser({ ...user, lastName: lastNameUpdated });
       setIsUpdatingLastName(false);
+      document.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -53,6 +54,7 @@ function ToModifyLastName() {
               type="text"
               placeholder="Nom"
               value={lastNameUpdated}
+              maxLength={20}
               aria-label="nom utilisateur"
               onChange={(e) => setLastNameUpdated(e.target.value)}
             ></input>
