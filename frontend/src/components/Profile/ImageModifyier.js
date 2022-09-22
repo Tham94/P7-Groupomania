@@ -5,7 +5,7 @@ import Auth from '../../contexts/Auth';
 import { getToken } from '../../services/LocalStorage';
 
 function ToModifyImage() {
-  const { user } = useContext(Auth);
+  const { user, setUser } = useContext(Auth);
   const [image, setImage] = useState(undefined);
   const token = getToken('sessionToken');
 
@@ -14,7 +14,7 @@ function ToModifyImage() {
     userImage.append('image', image);
     if (image !== undefined) {
       try {
-        await AxiosClient({
+        const response = await AxiosClient({
           method: 'put',
           url: `api/auth/users/${user.id}/image`,
           headers: { Authorization: 'Bearer ' + token },
@@ -27,9 +27,7 @@ function ToModifyImage() {
           closeOnClick: false,
           pauseOnHover: false,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        setUser({ ...user, imageUrl: response.data.newImageUrl });
       } catch (error) {
         console.log(error);
       }

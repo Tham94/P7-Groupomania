@@ -140,7 +140,14 @@ exports.updateProfilePic = async (req, res) => {
             },
           });
         });
-    res.status(201).json({ message: "L'image a bien été modifié" });
+    res
+      .status(201)
+      .json({
+        message: "L'image a bien été modifié",
+        newImageUrl: `${req.protocol}://${req.get('host')}/images/${
+          image.filename
+        }`,
+      });
   } catch (error) {
     res.status(500).json({ error });
   }

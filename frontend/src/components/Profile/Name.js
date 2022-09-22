@@ -26,7 +26,6 @@ function ToModifyName() {
       });
       setUser({ ...user, name: nameUpdated });
       setIsUpdatingName(false);
-      document.location.reload();
     } catch (error) {
       console.log(error);
     }

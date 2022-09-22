@@ -26,7 +26,6 @@ function ToModifyLastName() {
       });
       setUser({ ...user, lastName: lastNameUpdated });
       setIsUpdatingLastName(false);
-      document.location.reload();
     } catch (error) {
       console.log(error);
     }

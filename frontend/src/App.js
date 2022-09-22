@@ -57,7 +57,7 @@ function App() {
       }
     };
     fetchUsers().catch(console.error);
-  }, [isAuthenticated]);
+  }, [user]);
 
   useEffect(() => {
     const token = getToken('sessionToken');
@@ -71,7 +71,7 @@ function App() {
       }
     };
     fetchPosts().catch(console.error);
-  }, [isAuthenticated]);
+  }, [user]);
 
   useEffect(() => {
     const token = getToken('sessionToken');

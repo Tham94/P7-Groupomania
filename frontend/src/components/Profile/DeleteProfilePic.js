@@ -5,7 +5,7 @@ import Auth from '../../contexts/Auth';
 import { getToken } from '../../services/LocalStorage';
 
 function ToDeleteProfilePic() {
-  const { user } = useContext(Auth);
+  const { user, setUser } = useContext(Auth);
   const token = getToken('sessionToken');
 
   const deleteImage = async () => {
@@ -26,9 +26,7 @@ function ToDeleteProfilePic() {
           closeOnClick: false,
           pauseOnHover: false,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        setUser({ ...user, imageUrl: null });
       } catch (error) {
         console.error(error);
       }
