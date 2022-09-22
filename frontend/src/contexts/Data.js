@@ -7,6 +7,9 @@ export default React.createContext({
   allPosts: [],
   setAllPosts: (value) => [],
 
+  userPosts: [],
+  setUserPosts: (value) => {},
+
   likes: [],
   setLikes: (value) => [],
 

@@ -6,6 +6,7 @@ const multer = require('../middlewares/multer-config');
 const router = express.Router();
 
 router.get('/', postCtrl.getAllPosts);
+router.get('/user/posts', auth, postCtrl.getPostsByUser);
 router.get('/likes', auth, postCtrl.getLikes);
 router.get('/dislikes', auth, postCtrl.getDislikes);
 router.get('/:id', postCtrl.getOnePost);

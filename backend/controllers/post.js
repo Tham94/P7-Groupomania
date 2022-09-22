@@ -38,6 +38,19 @@ exports.getOnePost = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+exports.getPostsByUser = async (req, res) => {
+  const userId = req.auth.id;
+  try {
+    const userPosts = await prisma.post.findMany({
+      where: { authorId: userId },
+    });
+    res.status(200).json(userPosts);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
 /**
  * [createPost description]
  *

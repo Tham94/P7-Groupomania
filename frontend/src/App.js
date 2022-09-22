@@ -26,6 +26,8 @@ function App() {
   /* State pour maintenir afficher les données de l'API */
   const [allUsers, setAllUsers] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
+  /* State pour maintenir les posts de l'utilisateur */
+  const [userPosts, setUserPosts] = useState([]);
   /* State pour maintenir les tables likes et dislikes */
   const [likes, setLikes] = useState([]);
   const [dislikes, setDislikes] = useState([]);
@@ -71,6 +73,20 @@ function App() {
       }
     };
     fetchPosts().catch(console.error);
+  }, [userPosts]);
+
+  useEffect(() => {
+    const token = getToken('sessionToken');
+    const fetchUserPosts = async () => {
+      if (token) {
+        const response = await AxiosClient({
+          url: 'api/posts/user/posts',
+          headers: { Authorization: 'Bearer ' + token },
+        });
+        setUserPosts(response.data);
+      }
+    };
+    fetchUserPosts().catch(console.error);
   }, [user]);
 
   useEffect(() => {
@@ -123,6 +139,8 @@ function App() {
             setLikes,
             dislikes,
             setDislikes,
+            userPosts,
+            setUserPosts,
           }}
         >
           <Layout>
