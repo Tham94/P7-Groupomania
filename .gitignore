@@ -16,8 +16,9 @@ frontend/src/__tests__
 frontend/build
 
 # misc
-backend/images/*
 !backend/images/.keep
+/backend/images/*
+
 .vscode
 backend/.env
 frontend/.env.local
