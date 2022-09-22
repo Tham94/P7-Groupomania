@@ -30,10 +30,10 @@
       height: 50px;
     }
     > img {
-      width: 130%;
-      height: 130%;
+      width: 120%;
+      height: 120%;
       object-fit: cover;
-      object-position: -15px -15px;
+      object-position: -5px -5px;
       @include mobile-screen {
         object-position: -5px -5px;
       }

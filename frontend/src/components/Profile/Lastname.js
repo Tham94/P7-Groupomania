@@ -48,7 +48,7 @@ function ToModifyLastName() {
         )}
 
         {isUpdatingLastName && (
-          <>
+          <div className="Modifying-name-btn">
             <input
               className="Profile__edit-name"
               type="text"
@@ -58,18 +58,18 @@ function ToModifyLastName() {
               aria-label="nom utilisateur"
               onChange={(e) => setLastNameUpdated(e.target.value)}
             ></input>
+
             <button type="submit" onClick={modifyLastName}>
               Valider
             </button>
             <div
-              className="Modifying-name-cancel"
               onClick={() => {
                 setIsUpdatingLastName(false);
               }}
             >
               <i className="fa-solid fa-backward"></i>
             </div>
-          </>
+          </div>
         )}
       </div>
     </>

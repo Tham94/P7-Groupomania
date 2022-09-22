@@ -48,7 +48,8 @@ function ToModifyName() {
           </div>
         )}
         {isUpdatingName && (
-          <>
+          <div className="Modifying-name-btn">
+            {' '}
             <input
               className="Profile__edit-name"
               type="text"
@@ -69,7 +70,7 @@ function ToModifyName() {
             >
               <i className="fa-solid fa-backward"></i>
             </div>
-          </>
+          </div>
         )}
       </div>
     </>

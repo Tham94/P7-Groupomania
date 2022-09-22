@@ -63,7 +63,7 @@
     width: 75%;
     margin-left: auto;
     margin-right: auto;
-    @include mobile-screen {
+    @include tablet-screen {
       width: 85%;
     }
   }
@@ -71,12 +71,30 @@
     display: flex;
     justify-content: space-between;
   }
+  &__edit-name {
+    @include tablet-screen {
+      width: 50%;
+    }
+    + button {
+      margin: 0px 5px;
+      @include mobile-screen {
+        width: 20%;
+      }
+    }
+  }
 }
 
 .User__details-name {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  @include mobile-screen {
+    flex-direction: column;
+  }
+}
+.Modifying-name-btn {
+  display: flex;
+  flex-direction: row;
 }
 .User {
   &__name,
