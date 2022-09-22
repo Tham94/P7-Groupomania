@@ -23,14 +23,13 @@ function ToModifyImage() {
         });
         toast.success('Image de profil modifié', {
           position: 'top-center',
-          autoClose: 1000,
+          autoClose: 500,
           closeOnClick: false,
           pauseOnHover: false,
         });
-        window.location.reload();
         setTimeout(() => {
           window.location.reload();
-        }, 1000);
+        }, 500);
       } catch (error) {
         console.log(error);
       }
