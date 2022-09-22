@@ -1,41 +1,43 @@
-## GROUPOMANIA - Réseau social d'entreprise
+# GROUPOMANIA - Réseau social d'entreprise :busts_in_silhouette:
+## étape de mise en route :
 
-étape de mise en route :
+### Initialisation du projet: :file_folder:
+- créer un dossier en local 
 
-- créer un dossier en local
+- y cloner le repository à l'aide de votre CLI avec cette commande:  
+`git clone https://github.com/Tham94/P7-Groupomania.git`
 
-- y cloner le repository à l'aide de votre CLI avec cette commande:
-  git clone https://github.com/Tham94/P7-Groupomania.git
+### Installation des packages : :package:
 
-* Installation des packages :
+- se positionner avec le CLI sur le dossier backend ET lancer la commande :  
+`npm install`
 
-- se positionner avec le CLI sur le dossier backend ET lancer la commande :
-  npm install
+- se positionner sur le dossier frontend et lancer la commande :  
+`npm install`
 
-- se positionner sur le dossier frontend et lancer la commande :
-  npm install
-
-* Définition des Variables d'environnement :
-
+### Définition des Variables d'environnement : :pencil:
+#### Backend
 - copier le fichier .env.example du dossier \backend
 - le coller au même endroit puis renommer celui-ci par ".env"
-- Ouvrir ce fichier .env et remplacer les variables par vos propres valeurs,ex:
-  DATABASE_URL=mysql://root:monmotdepasse@localhost:8080/groupomania
-  SECRET_KEY_SALTED = CleSecrete12!!
-  PORT = 9000
-  ATTENTION LE PORT DOIT ÊTRE DIFFERENT DE 3000
+- Ouvrir ce fichier .env et remplacer les variables par vos propres valeurs,ex:  
+>DATABASE_URL=mysql://root:monmotdepasse@localhost:8080/groupomania  
+>SECRET_KEY_SALTED = CleSecrete12  
+>PORT = 9000  
 
+**ATTENTION LE PORT DOIT ÊTRE DIFFERENT DE 3000**
+#### Frontend
 - copier le fichier .env.example du dossier \frontend
 - le coller au même endroit puis renommer celui-ci par ".env"
-- Ouvrir ce fichier .env et remplacer les variables par vos propres valeurs,ex:
-  REACT_APP_API_URL= http://localhost:9000/
-  ATTENTION le port doit correspondre avec celui choisit dans le backend (PORT)
+- Ouvrir ce fichier .env et remplacer les variables par vos propres valeurs,ex:  
+>REACT_APP_API_URL= http://localhost:9000/  
 
-* Lancement de l'application
+**ATTENTION le port doit correspondre avec celui choisit dans le backend (PORT)**
 
-- se positionner sur le dosser \backend et lancer :
-  npm start
-- se positionner sur le dosser \frontend et lancer :
-  npm start
+### Lancement de l'application :rocket:
+
+- se positionner sur le dossier \backend et lancer :
+  `npm start`
+- se positionner sur le dossier \frontend et lancer :
+  `npm start`
 
 - l'application sera lancé sur http://localhost:3000
