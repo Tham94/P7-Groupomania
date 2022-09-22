@@ -780,15 +780,21 @@ a {
   border-radius: 50%;
   padding: 2px;
 }
-.Display__user-pic > img {
-  width: 100%;
-  height: 60px;
-  object-fit: cover;
-}
 @media screen and (max-width: 768px) {
   .Display__user-pic {
     width: 50px;
     height: 50px;
+  }
+}
+.Display__user-pic > img {
+  width: 130%;
+  height: 130%;
+  object-fit: cover;
+  object-position: -15px -15px;
+}
+@media screen and (max-width: 768px) {
+  .Display__user-pic > img {
+    object-position: -5px -5px;
   }
 }
 .Display__post-header {
