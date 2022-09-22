@@ -115,11 +115,10 @@ exports.updateUserLastName = async (req, res) => {
   }
 };
 
-exports.updateImageUser = async (req, res) => {
+exports.updateProfilePic = async (req, res) => {
   const { id } = req.auth;
   const image = req.file;
-  const { remove } = req.body;
-  const user = await prisma.user.findUnique({ where: { id: id } });
+  const user = await prisma.user.findUnique({ where: { id } });
 
   try {
     user.imageUrl === null
@@ -133,7 +132,7 @@ exports.updateImageUser = async (req, res) => {
         })
       : fs.unlink(`images/${user.imageUrl.split('/images/')[1]}`, async () => {
           await prisma.user.update({
-            where: { id: id },
+            where: { id },
             data: {
               imageUrl: `${req.protocol}://${req.get('host')}/images/${
                 image.filename
@@ -142,6 +141,23 @@ exports.updateImageUser = async (req, res) => {
           });
         });
     res.status(201).json({ message: "L'image a bien été modifié" });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
+exports.deleteProfilePic = async (req, res) => {
+  const { id } = req.auth;
+  const { imageUrl } = req.body;
+  const user = await prisma.user.findUnique({ where: { id } });
+  try {
+    fs.unlink(`images/${user.imageUrl.split('/images/')[1]}`, async () => {
+      await prisma.user.update({
+        where: { id },
+        data: { imageUrl },
+      });
+    });
+    res.status(201).json({ message: "L'image a bien été supprimé" });
   } catch (error) {
     res.status(500).json({ error });
   }

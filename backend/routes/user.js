@@ -12,6 +12,7 @@ router.post('/signup', passwordValidator, userCtrl.signup);
 router.post('/login', userCtrl.login);
 router.put('/users/:id/name', auth, userCtrl.updateUserName);
 router.put('/users/:id/lastname', auth, userCtrl.updateUserLastName);
-router.put('/users/:id/image', auth, multer, userCtrl.updateImageUser);
+router.put('/users/:id/image', auth, multer, userCtrl.updateProfilePic);
+router.put('/users/:id/image/delete', auth, multer, userCtrl.deleteProfilePic);
 router.delete('/users/:id', auth, userCtrl.deleteUser);
 module.exports = router;
