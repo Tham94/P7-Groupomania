@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const AxiosLike = axios.create({
   method: 'post',
-  baseURL: `http://localhost:9000/api/posts/`,
+  baseURL: `${process.env.REACT_APP_API_URL}api/posts/`,
   timeout: 1000,
   'Content-Type': 'application/json',
   withCredentials: true,
