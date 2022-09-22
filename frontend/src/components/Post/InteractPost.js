@@ -1,12 +1,14 @@
 import AxiosClient from '../../client/AxiosClient';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getToken } from '../../services/LocalStorage';
+import Data from '../../contexts/Data';
 
 function InteractPost(props) {
   const token = getToken('sessionToken');
   const [isUpdated, setIsUpdated] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
+  const { userPosts, setUserPosts } = useContext(Data);
 
   /**
    * [ Suppression d'un post:
@@ -26,24 +28,23 @@ function InteractPost(props) {
         url: `api/posts/${props.id}`,
         headers: { Authorization: 'Bearer ' + token },
       });
+      const rowsToKeep = userPosts.filter((toKeep) => toKeep.id !== props.id);
+      setUserPosts(rowsToKeep);
       setIsDeleted(true);
     }
   };
 
   useEffect(() => {
     if (isUpdated || isDeleted) {
-      setTimeout(() => {
-        document.location.reload();
-      }, 1500);
       if (isDeleted) {
-        toast.info(`Suppression en cours`, {
+        toast.info(`Post supprimé 👍`, {
           position: 'top-center',
           autoClose: 1000,
           pauseOnHover: false,
         });
       }
       if (isUpdated) {
-        toast.info(`Message modifié`, {
+        toast.info(`Message modifié 👍`, {
           position: 'top-center',
           autoClose: 1000,
           pauseOnHover: false,
