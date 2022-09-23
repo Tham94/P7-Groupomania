@@ -9,13 +9,14 @@ import Data from '../contexts/Data';
 function Header() {
   const { isAuthenticated, setIsAuthenticated, user, setUser } =
     useContext(Auth);
-  const { setLikes, setDislikes, setAllPosts, setAllUsers } = useContext(Data);
+  const { setLikes, setDislikes, setAllPosts, setAllUsers, setUserPosts } =
+    useContext(Data);
 
   /**
    * [ Déconnexion de l'utilisateur :
    * - Demande de confirmation avant déconnexion
    * - Suppression du token dans le localStorage => redirection vers login
-   * - Réinitialisation du Context
+   * - Réinitialisation des Context
    * - Affichage d'un toast  ]
    *
    */
@@ -27,6 +28,7 @@ function Header() {
       setUser({});
       setAllPosts([]);
       setAllUsers([]);
+      setUserPosts([]);
       setLikes([]);
       setDislikes([]);
       /**
@@ -45,7 +47,7 @@ function Header() {
       }
       toast.info(`A bientôt ${userNotNull()} 👋!`, {
         position: 'top-right',
-        autoClose: 2000,
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: false,
