@@ -54,6 +54,7 @@
   }
 
   &__post-title {
+    text-align: center;
     padding: 0px 5%;
     color: $color-tertiary;
     text-shadow: 1px 1px darken($color: $color-tertiary, $amount: 1);

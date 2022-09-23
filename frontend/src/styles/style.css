@@ -811,6 +811,7 @@ a {
   flex-direction: column;
 }
 .Display__post-title {
+  text-align: center;
   padding: 0px 5%;
   color: #4e5166;
   text-shadow: 1px 1px #4c4f63;
