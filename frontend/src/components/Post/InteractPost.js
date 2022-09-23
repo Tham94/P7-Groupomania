@@ -9,30 +9,7 @@ function InteractPost(props) {
   const [isUpdated, setIsUpdated] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
   const { userPosts, setUserPosts } = useContext(Data);
-
-  /**
-   * [ Suppression d'un post:
-   * - demande de confirmation avant suppression
-   * - si ok, suppression effectué
-   * - rafraichissement de page ]
-   *
-   * ]
-   */
-  const deletePost = async () => {
-    const confirmation = window.confirm(
-      'Voulez-vous supprimer définitivement ce post?'
-    );
-    if (confirmation) {
-      await AxiosClient({
-        method: 'delete',
-        url: `api/posts/${props.id}`,
-        headers: { Authorization: 'Bearer ' + token },
-      });
-      const rowsToKeep = userPosts.filter((toKeep) => toKeep.id !== props.id);
-      setUserPosts(rowsToKeep);
-      setIsDeleted(true);
-    }
-  };
+  const newUserPostsList = userPosts.slice();
 
   useEffect(() => {
     if (isUpdated || isDeleted) {
@@ -52,14 +29,41 @@ function InteractPost(props) {
       }
     }
   }, [isUpdated, isDeleted]);
+  /**
+   * [ Suppression d'un post:
+   * - demande de confirmation avant suppression
+   * - si ok, suppression effectué
+   * - mise à jour du State contenant les posts de l'utilisateur ]
+   *
+   * ]
+   */
+  const deletePost = async () => {
+    const confirmation = window.confirm(
+      'Voulez-vous supprimer définitivement ce post?'
+    );
+    if (confirmation) {
+      await AxiosClient({
+        method: 'delete',
+        url: `api/posts/${props.id}`,
+        headers: { Authorization: 'Bearer ' + token },
+      });
+      const rowsToKeep = userPosts.filter((toKeep) => toKeep.id !== props.id);
+      setUserPosts(rowsToKeep);
+      setIsDeleted(true);
+    }
+  };
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [title, setTitle] = useState(props.title);
   const [content, setContent] = useState(props.content);
   const [image, setImage] = useState('');
+  const foundPost = userPosts.find((post) => post.id === props.id);
 
   /**
-   * [ Modification d'un post : avec construction d'un nouvel objet FormDate contenant les valeurs modifiées ]
+   * [ Modification d'un post :
+   * - construction d'un nouvel objet FormDate contenant les valeurs modifiées
+   * - récupération des nouvelles données depuis le backend pour afficher dans le state
+   * - le post est supprimé de la liste puis ajouter avec les valeurs mises à jour ]
    *
    * @param   {event}  e  [évènement de soumission du formulaire de modification]
    *
@@ -71,13 +75,34 @@ function InteractPost(props) {
     formData.append('content', content);
     formData.append('image', image);
     try {
-      await AxiosClient({
+      const response = await AxiosClient({
         method: 'put',
         url: `api/posts/${props.id}`,
         headers: { Authorization: 'Bearer ' + token },
         'Content-Type': 'multipart/form-data',
         data: formData,
       });
+      const newTitle = response.data.title;
+      const newContent = response.data.content;
+      const imageUrlSetter = () => {
+        if (response.data.imageUrl === undefined) {
+          return null;
+        } else {
+          return response.data.imageUrl;
+        }
+      };
+      const rowsToKeep = newUserPostsList.filter(
+        (toKeep) => toKeep.id !== props.id
+      );
+      rowsToKeep.push({
+        ...foundPost,
+        title: newTitle,
+        content: newContent,
+        imageUrl: imageUrlSetter(),
+      });
+
+      setUserPosts(rowsToKeep);
+      setIsUpdating(false);
       setIsUpdated(true);
     } catch (error) {
       console.log(error);

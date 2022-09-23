@@ -150,8 +150,16 @@ exports.updatePost = async (req, res) => {
           .status(403)
           .json({ message: 'Non autorisé pour modifier ce message' });
       }
-
-      res.status(201).json({ message: 'Le message a bien été modifié' });
+      res
+        .status(201)
+        .json({
+          message: 'Le message a bien été modifié',
+          title: title,
+          content: content,
+          imageUrl: `${req.protocol}://${req.get('host')}/images/${
+            req.file.filename
+          }`,
+        });
     } else {
       res.status(404).json({ message: 'Post inconnu' });
     }
