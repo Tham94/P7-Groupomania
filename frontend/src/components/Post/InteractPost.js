@@ -12,21 +12,19 @@ function InteractPost(props) {
   const newUserPostsList = userPosts.slice();
 
   useEffect(() => {
-    if (isUpdated || isDeleted) {
-      if (isDeleted) {
-        toast.info(`Post supprimé 👍`, {
-          position: 'top-center',
-          autoClose: 1000,
-          pauseOnHover: false,
-        });
-      }
-      if (isUpdated) {
-        toast.info(`Message modifié 👍`, {
-          position: 'top-center',
-          autoClose: 1000,
-          pauseOnHover: false,
-        });
-      }
+    if (isDeleted) {
+      toast.info(`Post supprimé 👍`, {
+        position: 'top-center',
+        autoClose: 1000,
+        pauseOnHover: false,
+      });
+    }
+    if (isUpdated) {
+      toast.info(`Message modifié 👍`, {
+        position: 'top-center',
+        autoClose: 1000,
+        pauseOnHover: false,
+      });
     }
   }, [isUpdated, isDeleted]);
   /**

@@ -149,7 +149,11 @@ function App() {
               <Route exact path="/login" element={<Home />} />
               <Route exact path="/signup" element={<SignUp />} />
               <Route element={<AuthenticatedRoute />}>
-                <Route exact path="/profile/:id" element={<Profile />} />
+                <Route
+                  exact
+                  path={`/profile/${user.id}`}
+                  element={<Profile />}
+                />
                 <Route exact path="/forum" element={<Forum />} />
               </Route>
             </Routes>

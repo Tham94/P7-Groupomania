@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import AxiosClient from '../client/AxiosClient';
+import { useNavigate } from 'react-router-dom';
+import Auth from '../contexts/Auth';
 
 /**
  * [ Affichage du formulaire d'inscription avec soumission ]
@@ -10,7 +12,15 @@ import AxiosClient from '../client/AxiosClient';
  * @return  {[JSX.Element]}      [ Formulaire Formik avec gestion de la validation des champs ]
  */
 function SignUpForm() {
+  const { isAuthenticated } = useContext(Auth);
   const [apiError, setApiError] = useState('');
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/forum');
+    }
+  }, [navigate, isAuthenticated]);
   /**
    * [ Requête post pour s'enregistrer dans la base de données
    *   Redirection vers la page de connexion
