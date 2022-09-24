@@ -138,16 +138,16 @@ function Like(props) {
       {isLiked() && (
         <div className="LikeOrNot">
           <div className="Like">
-            <button onClick={handleLike} className="UserLiked">
+            <div role="button" onClick={handleLike} className="UserLiked">
               <i className="fa-solid fa-thumbs-up Like-icon"></i>
-            </button>
+            </div>
             <span className="Like-count"> {likesCount}</span>
           </div>
 
           <div className="Like">
-            <button className="dislike-btn Disable-btn">
+            <div role="button" className="dislike-btn Disable-btn">
               <i className="fa-solid fa-thumbs-down Like-icon--disable Dislike"></i>
-            </button>
+            </div>
             <span className="Like-count"> {dislikesCount}</span>
           </div>
         </div>
@@ -156,16 +156,16 @@ function Like(props) {
       {isDisliked() && (
         <div className="LikeOrNot">
           <div className="Like">
-            <button className="like-btn Disable-btn">
+            <div role="button" className="like-btn Disable-btn">
               <i className="fa-solid fa-thumbs-up Like-icon--disable"></i>
-            </button>
+            </div>
             <span className="Like-count"> {likesCount}</span>
           </div>
 
           <div className="Like">
-            <button onClick={handleDislike} className="UserLiked">
+            <div role="button" onClick={handleDislike} className="UserLiked">
               <i className="fa-solid fa-thumbs-down Like-icon Dislike"></i>
-            </button>
+            </div>
             <span className="Like-count"> {dislikesCount}</span>
           </div>
         </div>
@@ -174,16 +174,16 @@ function Like(props) {
       {!isLiked() && !isDisliked() && (
         <div className="LikeOrNot">
           <div className="Like">
-            <button onClick={handleLike} className="like-btn">
+            <div role="button" onClick={handleLike} className="like-btn">
               <i className="fa-solid fa-thumbs-up Like-icon"></i>
-            </button>
+            </div>
             <span className="Like-count"> {likesCount}</span>
           </div>
 
           <div className="Like">
-            <button onClick={handleDislike} className="dislike-btn ">
+            <div role="button" onClick={handleDislike} className="dislike-btn ">
               <i className="fa-solid fa-thumbs-down Like-icon Dislike"></i>
-            </button>
+            </div>
             <span className="Like-count"> {dislikesCount}</span>
           </div>
         </div>
