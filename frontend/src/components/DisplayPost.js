@@ -84,7 +84,7 @@ function DisplayPost() {
                   className="Display__post-img-container"
                 >
                   <img
-                    alt="post_image"
+                    alt="posté par l'auteur"
                     src={post.imageUrl}
                     className="Display__post-img"
                   ></img>

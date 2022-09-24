@@ -54,7 +54,7 @@ function FormPost() {
   return (
     <>
       <section className="Forum__post-container">
-        <h2 className="Forum__post-h2">Postes un message !</h2>
+        <h1 className="Forum__post-h2">Postes un message !</h1>
 
         <form
           encType="multipart/form-data"
