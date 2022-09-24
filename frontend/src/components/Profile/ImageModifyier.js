@@ -42,6 +42,7 @@ function ToModifyImage() {
           Modifier votre image de profil
         </label>
         <input
+          aria-label="choisir une image de profil"
           type="file"
           name="image"
           id="img-upload"
