@@ -98,10 +98,10 @@ function InteractPost(props) {
         content: newContent,
         imageUrl: imageUrlSetter(),
       });
-
       setUserPosts(rowsToKeep);
       setIsUpdating(false);
       setIsUpdated(true);
+      setImage(undefined);
     } catch (error) {
       console.log(error);
     }

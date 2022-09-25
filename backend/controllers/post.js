@@ -107,52 +107,49 @@ exports.updatePost = async (req, res) => {
   const image = req.file;
 
   try {
-    if (post !== null) {
-      if (authUser === post.authorId || role === 'admin') {
-        if (image === undefined) {
-          await prisma.post.update({
-            where: { id: parseInt(id) },
-            data: {
-              title: title,
-              content: content,
-            },
-          });
-        } else {
-          post.imageUrl === null
-            ? await prisma.post.update({
-                where: { id: parseInt(id) },
-                data: {
-                  title: title,
-                  content: content,
-                  imageUrl: `${req.protocol}://${req.get('host')}/images/${
-                    image.filename
-                  }`,
-                },
-              })
-            : fs.unlink(
-                `images/${post.imageUrl.split('/images/')[1]}`,
-                async () => {
-                  await prisma.post.update({
-                    where: { id: parseInt(id) },
-                    data: {
-                      title: title,
-                      content: content,
-                      imageUrl: `${req.protocol}://${req.get('host')}/images/${
-                        req.file.filename
-                      }`,
-                    },
-                  });
-                }
-              );
-        }
+    if (authUser === post.authorId || role === 'admin') {
+      if (image === undefined) {
+        await prisma.post.update({
+          where: { id: parseInt(id) },
+          data: {
+            title: title,
+            content: content,
+          },
+        });
+        res.status(201).json({
+          message: 'post modifié',
+          title: title,
+          content: content,
+        });
+        return;
       } else {
-        res
-          .status(403)
-          .json({ message: 'Non autorisé pour modifier ce message' });
-      }
-      res
-        .status(201)
-        .json({
+        post.imageUrl === null
+          ? await prisma.post.update({
+              where: { id: parseInt(id) },
+              data: {
+                title: title,
+                content: content,
+                imageUrl: `${req.protocol}://${req.get('host')}/images/${
+                  image.filename
+                }`,
+              },
+            })
+          : fs.unlink(
+              `images/${post.imageUrl.split('/images/')[1]}`,
+              async () => {
+                await prisma.post.update({
+                  where: { id: parseInt(id) },
+                  data: {
+                    title: title,
+                    content: content,
+                    imageUrl: `${req.protocol}://${req.get('host')}/images/${
+                      req.file.filename
+                    }`,
+                  },
+                });
+              }
+            );
+        res.status(201).json({
           message: 'Le message a bien été modifié',
           title: title,
           content: content,
@@ -160,8 +157,11 @@ exports.updatePost = async (req, res) => {
             req.file.filename
           }`,
         });
+      }
     } else {
-      res.status(404).json({ message: 'Post inconnu' });
+      res
+        .status(403)
+        .json({ message: 'Non autorisé pour modifier ce message' });
     }
   } catch (error) {
     res.status(500).json({ error });
